@@ -170,3 +170,11 @@ width: 330px;}
 .white-border:focus {
   border-color: white;
 }
+
+.dropdown-menu a:hover, #logout-btn:hover {
+    background-color: var(--primary-color-variant); /* 或您喜歡的懸停顏色 */
+    color: var(--white) !important;
+}
+#user-avatar-img {
+    cursor: pointer;
+}
