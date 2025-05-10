@@ -384,37 +384,7 @@
   </div>
   -->
 
-  <!-- Register Modal 
-  <div id="registerModal" class="modal">
-    <div class="modal-content">
-      <span class="close-register">&times;</span>
-      <h2>註冊</h2>
-      <form id="registerForm">
-        <div class="form-group">
-          <label for="reg-username">帳號:</label>
-          <input type="text" id="reg-username" name="reg-username" required>
-        </div>
-        <div class="form-group">
-          <label for="reg-email">電子郵件:</label>
-          <input type="email" id="reg-email" name="reg-email" required>
-        </div>
-        <div class="form-group">
-          <label for="reg-password">密碼:</label>
-          <input type="password" id="reg-password" name="reg-password" required>
-        </div>
-        <div class="form-group">
-          <label for="reg-confirm-password">確認密碼:</label>
-          <input type="password" id="reg-confirm-password" name="reg-confirm-password" required>
-        </div>
-        <button type="submit" class="register-submit-btn">註冊</button>
-      </form>
-      <div class="form-footer">
-        <p>已有帳號？ <a href="#" id="showLogin">立即登入</a></p>
-      </div>
-    </div>
-  </div>
--->
-
+  
 
 
 
@@ -3306,133 +3276,7 @@
     AOS.init();
   </script>
 
-  <!-- Login Modal JavaScript -->
-  <script>
-    // Get modal elements
-    const loginModal = document.getElementById('loginModal');
-    const registerModal = document.getElementById('registerModal');
-    const loginBtn = document.getElementById('loginBtn');
-    const closeLogin = document.getElementsByClassName('close')[0];
-    const closeRegister = document.getElementsByClassName('close-register')[0];
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const showRegister = document.getElementById('showRegister');
-    const showLogin = document.getElementById('showLogin');
-
-    // Open login modal when clicking the login button
-    loginBtn.onclick = function() {
-      loginModal.style.display = "block";
-    }
-
-    // Close modals when clicking the X
-    closeLogin.onclick = function() {
-      loginModal.style.display = "none";
-    }
-
-    closeRegister.onclick = function() {
-      registerModal.style.display = "none";
-    }
-
-    // Close modals when clicking outside of them
-    window.onclick = function(event) {
-      if (event.target == loginModal) {
-        loginModal.style.display = "none";
-      }
-      if (event.target == registerModal) {
-        registerModal.style.display = "none";
-      }
-    }
-
-    // Switch between login and register forms
-    showRegister.onclick = function(e) {
-      e.preventDefault();
-      loginModal.style.display = "none";
-      registerModal.style.display = "block";
-    }
-
-    showLogin.onclick = function(e) {
-      e.preventDefault();
-      registerModal.style.display = "none";
-      loginModal.style.display = "block";
-    }
-
-    // Handle login form submission
-    loginForm.onsubmit = function(e) {
-      e.preventDefault();
-      
-      const username = document.getElementById('username').value;
-      const password = document.getElementById('password').value;
-
-      // Get registered users from localStorage
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-      const user = users.find(u => u.username === username && u.password === password);
-
-      if (user) {
-        // Store user info in localStorage
-        localStorage.setItem('userInfo', JSON.stringify({
-          username: user.username,
-          email: user.email,
-          isLoggedIn: true
-        }));
-        
-        // Redirect to profile page
-        window.location.href = 'profile.html';
-      } else {
-        alert('帳號或密碼錯誤！');
-      }
-    }
-
-    // Handle register form submission
-    registerForm.onsubmit = function(e) {
-      e.preventDefault();
-      
-      const username = document.getElementById('reg-username').value;
-      const email = document.getElementById('reg-email').value;
-      const password = document.getElementById('reg-password').value;
-      const confirmPassword = document.getElementById('reg-confirm-password').value;
-
-      // Validate passwords match
-      if (password !== confirmPassword) {
-        alert('密碼不一致！');
-        return;
-      }
-
-      // Get existing users
-      const users = JSON.parse(localStorage.getItem('users') || '[]');
-
-      // Check if username already exists
-      if (users.some(user => user.username === username)) {
-        alert('此帳號已被註冊！');
-        return;
-      }
-
-      // Add new user
-      users.push({
-        username,
-        email,
-        password
-      });
-
-      // Save users
-      localStorage.setItem('users', JSON.stringify(users));
-
-      alert('註冊成功！請登入');
-      registerModal.style.display = "none";
-      loginModal.style.display = "block";
-    }
-
-    // Check if user is already logged in
-    window.onload = function() {
-      const userInfo = localStorage.getItem('userInfo');
-      if (userInfo) {
-        const user = JSON.parse(userInfo);
-        if (user.isLoggedIn) {
-          loginBtn.style.display = 'none';
-          document.getElementById('userProfile').style.display = 'block';
-        }
-      }
-    }
-  </script>
+  
 
   <!--new google login button with client ID-->
   <script src="https://accounts.google.com/gsi/client" async defer></script>
@@ -3760,6 +3604,11 @@
   }
   </style>
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <!-- 您的其他 script 將會放在這裡的上方或下方，視需求而定 -->
 </body>
 
 </html>
