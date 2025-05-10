@@ -5,12 +5,15 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
   <title>What Movies Told ME</title>
   
 
   <!-- Font Awesome icons (free version)-->
         <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-  
+  <!--Google icon-->
+        <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
   <!-- 
     - favicon
   -->
@@ -32,10 +35,140 @@
   <!-- AOS -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://csshake.surge.sh/csshake.min.css">
+  
+  <style>
+    /* Login Button Styles */
+    .login-btn {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+
+    .login-btn:hover {
+      background-color: #cc0000;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 500px;
+      border-radius: 8px;
+    }
+
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover {
+      color: black;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .login-submit-btn {
+      background-color: #ff0000;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+    }
+
+    .login-submit-btn:hover {
+      background-color: #cc0000;
+    }
+  </style>
 </head>
 
 <body id="top">
-  
+  <!--最上方Google登入鍵（無效）影響，先隱藏
+     user使用google帳號一鍵登入
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+    <div id="g_id_onload"
+         data-client_id="123126499028-toiu07rksd486r9ci77doidv4mmjssmr.apps.googleusercontent.com"
+         data-callback="handleCredentialResponse"
+         data-login_uri="https://xpyfx.github.io/xpyfx-2025tt/"
+         data-auto_prompt="false">
+    </div>
+    
+    <div class="g_id_signin"
+         data-type="standard"
+         data-size="large"
+         data-theme="outline"
+         data-text="sign_in_with"
+         data-shape="rectangular"
+         data-logo_alignment="left">
+    </div>
+    
+    顯示使用者資訊的地方
+    <div id="user-info" style="margin-top: 20px;"></div>
+    
+    <script>
+      function handleCredentialResponse(response) {
+        // 解析 ID Token
+        const data = parseJwt(response.credential);
+        
+        // 把名字和email放進頁面
+        document.getElementById("user-info").innerHTML = `
+          <h3>登入成功！</h3>
+          <p><strong>名字：</strong> ${data.name}</p>
+          <p><strong>Email：</strong> ${data.email}</p>
+          <img src="${data.picture}" alt="大頭貼" style="border-radius:50%; width:100px; height:100px;">
+        `;
+      }
+    
+      function parseJwt(token) {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        
+        return JSON.parse(jsonPayload);
+      }
+    </script>
+    -->
 
   <!-- 
     - #HEADER
@@ -51,27 +184,14 @@
       </a>
 
       <div class="header-actions">
-
-        <!-- 20240608 commented by seraphwu<button class="search-btn">
-          <ion-icon name="search-outline"></ion-icon>
-        </button>
-
-        <!--20240601 commented by 吳林展-->
-        <!--div class="lang-wrapper">
-          <label for="language">
-            <ion-icon name="globe-outline"></ion-icon>
-          </label>
-
-          <select name="language" id="language">
-            <option value="en">EN</option>
-            <option value="au">AU</option>
-            <option value="ar">AR</option>
-            <option value="tu">TU</option>
-          </select>
-        </div>-->
-
-        <!--button class="btn btn-primary">Sign in</button-->
-
+        <div class="user-profile" id="userProfile" style="display:none;">
+          <img src="" alt="用户头像" id="userAvatar" class="user-avatar">
+          <div class="user-dropdown" id="userDropdown">
+            <a href="me.html">我的收藏</a>
+            <a href="#" id="logoutBtn">登出</a>
+          </div>
+        </div>
+        <button id="loginBtn" class="login-btn">登入</button>
       </div>
 
       <button class="menu-open-btn" data-menu-open-btn>
@@ -158,6 +278,36 @@
             <a href="./index.html#all" class="navbar-link">觀看全部</a>
           </li>
           </div>
+
+          <!--google的login icon
+          <button id="google-login" class="btn-login">
+            <span class="material-symbols-outlined" style="vertical-align: middle;">login</span>
+            Google登入
+          </button>
+          
+          （接續上面）Google login icon的css
+          <style>
+            .material-symbols-outlined {
+              font-size: 20px;
+              margin-right: 5px;
+            }
+          </style>
+-->
+          
+          <!-- 放在你的 <nav> 裡面，跟主頁、愛情、報仇那些並列 -->
+          <li><button id="google-login-btn" style="background:none; border:none; color:white; font-size:16px; cursor:pointer;">Google登入</button></li>
+
+
+          <!--google login顯示-->
+          <div class="g_id_signin"
+          data-type="standard"
+          data-size="small"
+          data-theme="outline"
+          data-text="signin"
+          data-shape="rectangular"
+          data-logo_alignment="left">
+         </div>
+
         </ul>
 
         <!--ul class="navbar-social-list">
@@ -198,6 +348,25 @@
 
     </div>
   </header>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>登入</h2>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="username">帳號:</label>
+          <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+          <label for="password">密碼:</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="login-submit-btn">登入</button>
+      </form>
+    </div>
+  </div>
 
 
 
@@ -1153,7 +1322,7 @@
 
                 <a href="./movie-details-24.html">
                   <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/Blind_side_poster.jpg?v=1717853665597" alt="攻其不備電影海報">
+                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E6%94%BB%E5%85%B6%E4%B8%8D%E5%82%99.jpg?v=1717923382708" alt="攻其不備電影海報">
                   </figure>
                 </a>
 
@@ -2645,7 +2814,7 @@
       
        <!-- 
         - #Work-->
-     <!--
+       <!--
 
       <section class="tv-series" data-aos="fade-up">
         <div class="container">
@@ -2899,7 +3068,7 @@
 
         </div>
       </section>
--->
+      -->
 
 
       
@@ -3081,6 +3250,165 @@
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
   <script>
     AOS.init();
+  </script>
+
+  <!-- Login Modal JavaScript -->
+  <script>
+    // Get modal elements
+    const modal = document.getElementById('loginModal');
+    const btn = document.getElementById('loginBtn');
+    const span = document.getElementsByClassName('close')[0];
+    const loginForm = document.getElementById('loginForm');
+
+    // Open modal when clicking the login button
+    btn.onclick = function() {
+      modal.style.display = "block";
+    }
+
+    // Close modal when clicking the X
+    span.onclick = function() {
+      modal.style.display = "none";
+    }
+
+    // Close modal when clicking outside of it
+    window.onclick = function(event) {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
+
+    // Handle form submission
+    loginForm.onsubmit = function(e) {
+      e.preventDefault();
+      
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Here you would typically make an API call to your backend
+      // For demo purposes, we'll use a simple check
+      if (username === "admin" && password === "password") {
+        // Store user info in localStorage
+        localStorage.setItem('userInfo', JSON.stringify({
+          username: username,
+          isLoggedIn: true
+        }));
+        
+        // Redirect to profile page
+        window.location.href = 'profile.html';
+      } else {
+        alert('帳號或密碼錯誤！');
+      }
+    }
+
+    // Check if user is already logged in
+    window.onload = function() {
+      const userInfo = localStorage.getItem('userInfo');
+      if (userInfo) {
+        const user = JSON.parse(userInfo);
+        if (user.isLoggedIn) {
+          btn.style.display = 'none';
+          document.getElementById('userProfile').style.display = 'block';
+        }
+      }
+    }
+  </script>
+
+  <!--new google login button with client ID-->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script>
+    window.onload = function() {
+      google.accounts.id.initialize({
+        client_id: "123126499028-toiu07rksd486r9ci77doidv4mmjssmr.apps.googleusercontent.com", // My Own Client ID
+        callback: handleCredentialResponse
+      });
+
+      document.getElementById('google-login-btn').addEventListener('click', function() {
+        google.accounts.id.prompt(); // 手動呼叫Google登入提示
+      });
+    }
+
+    function handleCredentialResponse(response) {
+      const data = parseJwt(response.credential);
+      alert(`哇嗚嗚！！！恭喜你登入成功！歡迎：${data.name}來到我的世界！`);
+      // 你可以自己改成顯示名字或email
+    }
+
+    function parseJwt(token) {
+      const base64Url = token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      return JSON.parse(jsonPayload);
+    }
+
+    // 检查用户是否已登录
+    function checkLogin() {
+        const userInfo = localStorage.getItem('userInfo');
+        if (userInfo) {
+            const user = JSON.parse(userInfo);
+            document.getElementById('userAvatar').src = user.picture;
+            document.getElementById('userProfile').style.display = 'block';
+        } else {
+            document.getElementById('userProfile').style.display = 'none';
+        }
+    }
+
+    // 登出功能
+    document.getElementById('logoutBtn').addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('userInfo');
+        window.location.href = 'index.html';
+    });
+
+    // 显示/隐藏下拉菜单
+    document.getElementById('userAvatar').addEventListener('click', () => {
+        document.getElementById('userDropdown').classList.toggle('show');
+    });
+
+    // 页面加载时检查登录状态
+    window.addEventListener('load', checkLogin);
+  </script>
+
+  <script>
+  // ... existing code ...
+  // ====== 動態插入愛心收藏按鈕 ======
+  document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.movie-card').forEach(function(card) {
+      const hdBadge = card.querySelector('.badge-outline');
+      if (!hdBadge) return;
+      const title = card.querySelector('.card-title')?.textContent?.trim();
+      const url = card.querySelector('.title-wrapper a')?.getAttribute('href');
+      const image = card.querySelector('.card-banner img')?.getAttribute('src');
+      if (!title || !url || !image) return;
+      if (card.querySelector('.favorite-btn')) return;
+      const btn = document.createElement('button');
+      btn.className = 'favorite-btn';
+      btn.innerHTML = '<i class="fa-heart fa-regular"></i>';
+      btn.style.marginLeft = '8px';
+      function updateHeart() {
+        const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        const isFav = favorites.some(m => m.url === url);
+        btn.classList.toggle('active', isFav);
+        btn.querySelector('i').className = isFav ? 'fa-heart fa-solid' : 'fa-heart fa-regular';
+      }
+      updateHeart();
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        let favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+        const idx = favorites.findIndex(m => m.url === url);
+        if (idx === -1) {
+          favorites.push({ title, url, image });
+        } else {
+          favorites.splice(idx, 1);
+        }
+        localStorage.setItem('favorites', JSON.stringify(favorites));
+        updateHeart();
+      });
+      hdBadge.parentNode.insertBefore(btn, hdBadge.nextSibling);
+    });
+  });
+  // ... existing code ...
   </script>
 
 </body>
