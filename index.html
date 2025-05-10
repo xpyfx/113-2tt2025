@@ -353,9 +353,19 @@
           <button class="btn btn-primary" onclick="showLoginModal()">登入</button>
           <button class="btn btn-outline" onclick="showRegisterModal()">註冊</button>
         </div>
-        <div id="user-profile" style="display: none;">
-          <img src="./assets/images/avatar.jpg" alt="用戶頭貼" class="avatar" onclick="window.location.href='user.html'">
-        </div>
+        <div class="navbar-actions">
+  <div id="auth-buttons">
+    <button class="btn btn-primary" onclick="showLoginModal()">登入</button>
+    <button class="btn btn-outline" onclick="showRegisterModal()">註冊</button>
+  </div>
+  <div id="user-profile" style="display: none;">
+    <img src="./assets/images/avatar.jpg" alt="用戶頭貼" class="avatar" id="user-avatar-img" onclick="toggleUserDropdown()">
+    <div id="user-dropdown" class="dropdown-menu" style="display:none; position:absolute; background-color:var(--surface-color); border:1px solid var(--border-color); padding:10px; border-radius:5px; right: 10px; top: 60px; z-index:1001; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+      <a href="user.html" style="display:block; color:var(--white); padding:8px 12px; text-decoration: none; border-radius: 3px;">會員中心</a>
+      <button id="logout-btn" class="btn btn-danger" style="background-color: #dc3545; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; width:100%; margin-top:8px; text-align: left;">登出</button>
+    </div>
+  </div>
+</div>
       </div>
 
     </div>
