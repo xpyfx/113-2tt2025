@@ -148,3 +148,25 @@ width: 330px;}
 .favorite-btn.active i {
   color: #f5a8bc; /* 收藏後，填滿的實心愛心也是粉色 */
 }
+
+.form-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border: 1px solid white; /* 設定邊框為白色 */
+  border-radius: 4px;
+  background-color: transparent; /* 保持背景透明 */
+  color: var(--text-color);
+}
+
+.form-group input:focus {
+  border-color: white; /* 聚焦時仍為白色邊框 */
+  outline: none; /* 去除邊框高亮 */
+}
+
+.white-border {
+  border: 1px solid white;
+}
+
+.white-border:focus {
+  border-color: white;
+}

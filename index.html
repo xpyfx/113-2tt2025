@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<!--#cursor version 1.0.0-->
 
 <head>
   <meta charset="UTF-8">
@@ -75,6 +76,14 @@
       border-radius: 8px;
     }
 
+    .modal-content h2 {
+      color: #ffffff;
+    }
+
+    .form-group label {
+      color: #ffffff;
+    }
+
     .close {
       color: #aaa;
       float: right;
@@ -121,6 +130,7 @@
     .form-footer {
       margin-top: 20px;
       text-align: center;
+      color: #ffffff;
     }
 
     .form-footer a {
@@ -337,6 +347,16 @@
 
       </nav>
 
+      <div class="navbar-actions">
+        <div id="auth-buttons">
+          <button class="btn btn-primary" onclick="showLoginModal()">登入</button>
+          <button class="btn btn-outline" onclick="showRegisterModal()">註冊</button>
+        </div>
+        <div id="user-profile" style="display: none;">
+          <img src="./assets/images/avatar.jpg" alt="用户头像" class="avatar" onclick="window.location.href='user.html'">
+        </div>
+      </div>
+
     </div>
   </header>
 
@@ -348,7 +368,7 @@
       <form id="loginForm">
         <div class="form-group">
           <label for="username">帳號:</label>
-          <input type="text" id="username" name="username" required>
+          <input class="white-border" type="text" id="username" name="username" required>
         </div>
         <div class="form-group">
           <label for="password">密碼:</label>
@@ -950,6 +970,10 @@
 
                     <data>8.5</data>
                   </div>
+
+                  <button class="favorite-btn" onclick="toggleFavorite(this, '13')">
+                    <ion-icon name="heart-outline"></ion-icon>
+                  </button>
                 </div>
 
               </div>
@@ -2017,6 +2041,10 @@
 
                     <data>8.5</data>
                   </div>
+
+                  <button class="favorite-btn" onclick="toggleFavorite(this, '13')">
+                    <ion-icon name="heart-outline"></ion-icon>
+                  </button>
                 </div>
 
               </div>
@@ -3502,6 +3530,221 @@
   });
   // ... existing code ...
   </script>
+
+  <!-- 添加登录模态框 -->
+  <div id="login-modal" class="modal">
+    <div class="modal-content">
+      <h2>登入</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-username">用户名</label>
+          <input type="text" id="login-username" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">密碼</label>
+          <input type="password" id="login-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">登入</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 添加注册模态框 -->
+  <div id="register-modal" class="modal">
+    <div class="modal-content">
+      <h2>註冊</h2>
+      <form id="register-form">
+        <div class="form-group">
+          <label for="register-username">用户名</label>
+          <input class="white-border" type="text" id="register-username" required>
+        </div>
+        <div class="form-group">
+          <label for="register-password">密碼</label>
+          <input class="white-border" type="password" id="register-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary">註冊</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+  // 检查登录状态
+  function checkAuth() {
+    const token = localStorage.getItem('token');
+    const authButtons = document.getElementById('auth-buttons');
+    const userProfile = document.getElementById('user-profile');
+    
+    if (token) {
+      authButtons.style.display = 'none';
+      userProfile.style.display = 'block';
+    } else {
+      authButtons.style.display = 'flex';
+      userProfile.style.display = 'none';
+    }
+  }
+
+  // 显示登录模态框
+  function showLoginModal() {
+    document.getElementById('login-modal').style.display = 'block';
+  }
+
+  // 显示注册模态框
+  function showRegisterModal() {
+    document.getElementById('register-modal').style.display = 'block';
+  }
+
+  // 关闭模态框
+  window.onclick = function(event) {
+    if (event.target.className === 'modal') {
+      event.target.style.display = 'none';
+    }
+  }
+
+  // 处理登录
+  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('login-username').value;
+    const password = document.getElementById('login-password').value;
+
+    try {
+      const response = await fetch('http://localhost:3000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem('token', data.token);
+        document.getElementById('login-modal').style.display = 'none';
+        checkAuth();
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      alert('登录失败，请稍后重试');
+    }
+  });
+
+  // 处理注册
+  document.getElementById('register-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('register-username').value;
+    const password = document.getElementById('register-password').value;
+
+    try {
+      const response = await fetch('http://localhost:3000/api/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        alert('哇哇哇哇哇！你註冊成功了，請登入！！！');
+        document.getElementById('register-modal').style.display = 'none';
+        showLoginModal();
+      } else {
+        alert(data.message);
+      }
+    } catch (error) {
+      alert('注册失败，请稍后重试');
+    }
+  });
+
+  // 处理收藏
+  async function toggleFavorite(button, movieId) {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      showLoginModal();
+      return;
+    }
+
+    const icon = button.querySelector('ion-icon');
+    const isFavorite = icon.name === 'heart';
+
+    try {
+      const response = await fetch('http://localhost:3000/api/favorites', {
+        method: isFavorite ? 'DELETE' : 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ movieId })
+      });
+
+      if (response.ok) {
+        icon.name = isFavorite ? 'heart-outline' : 'heart';
+        icon.style.color = isFavorite ? 'inherit' : '#f58bac';
+      }
+    } catch (error) {
+      alert('操作失敗，請稍後再試！');
+    }
+  }
+
+  // 页面加载时检查登录状态
+  document.addEventListener('DOMContentLoaded', checkAuth);
+  </script>
+
+  <style>
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .modal-content {
+    background-color: var(--surface-color);
+    margin: 15% auto;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+  }
+
+  .form-group {
+    margin-bottom: 1rem;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-group input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    background-color: var(--background-color);
+    color: var(--white);
+  }
+
+  .favorite-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem;
+  }
+
+  .favorite-btn ion-icon {
+    font-size: 1.5rem;
+    transition: color 0.3s;
+  }
+
+  .favorite-btn:hover ion-icon {
+    color: #f58bac;
+  }
+  </style>
 
 </body>
 

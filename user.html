@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>个人页面</title>
+  <link rel="stylesheet" href="./css/style.css">
+  <link rel="stylesheet" href="./css/user.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container">
+      <div class="navbar">
+        <a href="./index.html" class="logo">
+          <img src="./assets/images/logo.svg" alt="Film logo">
+        </a>
+        <div class="navbar-actions">
+          <div class="user-profile">
+            <img src="./assets/images/avatar.jpg" alt="用戶頭像" class="avatar">
+            <div class="user-dropdown">
+              <button id="logoutBtn" class="logout-btn">登出</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="user-content">
+        <div class="sidebar">
+          <nav class="user-nav">
+            <ul>
+              <li><a href="#profile" class="active">个人资料</a></li>
+              <li><a href="#favorites">我的收藏</a></li>
+            </ul>
+          </nav>
+        </div>
+
+        <div class="main-content">
+          <section id="profile" class="profile-section">
+            <h2>个人资料</h2>
+            <div class="profile-info">
+              <div class="info-item">
+                <label>用户名</label>
+                <span id="username"></span>
+              </div>
+              <div class="info-item">
+                <label>注册时间</label>
+                <span id="register-date"></span>
+              </div>
+            </div>
+          </section>
+
+          <section id="favorites" class="favorites-section">
+            <h2>我的收藏</h2>
+            <div class="movie-grid" id="favorites-grid">
+              <!-- 收藏的电影将在这里动态显示 -->
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 檢查用戶是否已登入
+    const token = localStorage.getItem('token');
+    if (!token) {
+      window.location.href = 'index.html';
+      return;
+    }
+
+    // 登出功能
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('token');
+      window.location.href = 'index.html';
+    });
+
+    // 獲取用戶信息
+    async function fetchUserInfo() {
+      try {
+        const response = await fetch('http://localhost:3000/api/user', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const data = await response.json();
+        document.getElementById('username').textContent = data.username;
+        document.getElementById('register-date').textContent = new Date(data.createdAt).toLocaleDateString();
+      } catch (error) {
+        console.error('獲取用戶信息失敗:', error);
+      }
+    }
+
+    // 獲取收藏列表
+    async function fetchFavorites() {
+      try {
+        const response = await fetch('http://localhost:3000/api/favorites', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+        const favorites = await response.json();
+        const favoritesGrid = document.getElementById('favorites-grid');
+        favoritesGrid.innerHTML = favorites.map(movie => `
+          <div class="movie-card">
+            <a href="${movie.url}">
+              <figure class="card-banner">
+                <img src="${movie.image}" alt="${movie.title}">
+              </figure>
+            </a>
+            <div class="title-wrapper">
+              <h3 class="card-title">${movie.title}</h3>
+            </div>
+          </div>
+        `).join('');
+      } catch (error) {
+        console.error('獲取收藏列表失敗:', error);
+      }
+    }
+
+    fetchUserInfo();
+    fetchFavorites();
+  });
+  </script>
+
+  <style>
+  .user-dropdown {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .user-profile:hover .user-dropdown {
+    display: block;
+  }
+
+  .logout-btn {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .logout-btn:hover {
+    background-color: #cc0000;
+  }
+  </style>
+</body>
+</html> 

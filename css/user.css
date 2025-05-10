@@ -1,0 +1,79 @@
+.user-content {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem 0;
+}
+
+.sidebar {
+  width: 250px;
+  flex-shrink: 0;
+}
+
+.user-nav ul {
+  list-style: none;
+  padding: 0;
+}
+
+.user-nav a {
+  display: block;
+  padding: 1rem;
+  color: var(--white);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.user-nav a:hover,
+.user-nav a.active {
+  background-color: var(--primary-color);
+}
+
+.main-content {
+  flex-grow: 1;
+}
+
+.profile-section,
+.favorites-section {
+  background-color: var(--surface-color);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.profile-info {
+  display: grid;
+  gap: 1rem;
+}
+
+.info-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.info-item label {
+  font-weight: 600;
+  min-width: 100px;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 2rem;
+}
+
+.user-profile {
+  position: relative;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.avatar:hover {
+  transform: scale(1.1);
+} 
