@@ -11,7 +11,7 @@ app.use(cors());
 app.use(express.json());
 
 // 连接到MongoDB
-mongoose.connect('mongodb://localhost:27017/movieapp', {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/movieapp', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -74,7 +74,7 @@ app.post('/api/login', async (req, res) => {
     // 生成JWT token
     const token = jwt.sign(
       { userId: user._id, username: user.username },
-      'your_jwt_secret',
+      process.env.JWT_SECRET || 'your_jwt_secret',
       { expiresIn: '24h' }
     );
 
