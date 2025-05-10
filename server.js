@@ -7,7 +7,13 @@ const jwt = require('jsonwebtoken');
 const app = express();
 
 // 中间件
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://xpyfx.github.io',
+    'http://localhost:8080'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 // 连接到MongoDB
