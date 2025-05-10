@@ -133,8 +133,18 @@ width: 330px;}
 
 .favorite-btn i {
   color: #f5a8bc;
+   background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease;
 }
 
 .favorite-btn:hover i {
   color: #f28dae; /* hover 狀態略深一點，可自訂 */
+}
+
+
+.favorite-btn.active i {
+  color: #f5a8bc; /* 收藏後，填滿的實心愛心也是粉色 */
 }
