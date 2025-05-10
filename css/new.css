@@ -130,3 +130,11 @@ width: 330px;}
 }
 
 .logo {width:200px;}
+
+.favorite-btn i {
+  color: #f5a8bc;
+}
+
+.favorite-btn:hover i {
+  color: #f28dae; /* hover 狀態略深一點，可自訂 */
+}
