@@ -20,7 +20,6 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/movieapp'
 const userSchema = new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  email: { type: String, required: true },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -29,7 +28,7 @@ const User = mongoose.model('User', userSchema);
 // 注册路由
 app.post('/api/register', async (req, res) => {
   try {
-    const { username, password, email } = req.body;
+    const { username, password } = req.body;
     
     // 检查用户是否已存在
     const existingUser = await User.findOne({ username });
@@ -44,7 +43,6 @@ app.post('/api/register', async (req, res) => {
     const user = new User({
       username,
       password: hashedPassword,
-      email
     });
 
     await user.save();
