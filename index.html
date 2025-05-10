@@ -3426,141 +3426,406 @@
     </div>
   </div>
 
-  <script>
-  // 检查登录状态
-  function checkAuth() {
-    const token = localStorage.getItem('token');
-    const authButtons = document.getElementById('auth-buttons');
-    const userProfile = document.getElementById('user-profile');
-    
-    if (token) {
-      authButtons.style.display = 'none';
-      userProfile.style.display = 'block';
-    } else {
-      authButtons.style.display = 'flex';
-      userProfile.style.display = 'none';
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+  <!-- 您的其他 script 將會放在這裡的上方或下方，視需求而定 -->
+
+  // 重要：請確保 Firebase SDK 在此 script 之前載入
+
+// 您的 Web 應用程式的 Firebase 設定
+const firebaseConfig = {
+    apiKey: "AIzaSyA2w4v4NGa1xbiGWCCFBgPEVipsHQ1ELHU",
+    authDomain: "wmtm-f8685.firebaseapp.com",
+    projectId: "wmtm-f8685",
+    storageBucket: "wmtm-f8685.firebasestorage.app",
+    messagingSenderId: "576339094208",
+    appId: "1:576339094208:web:2725b0d1d34fd0d72c9b25",
+    measurementId: "G-0CS1G6YJGD"
+};
+
+// 初始化 Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+// DOM 元素
+const loginModal = document.getElementById('login-modal');
+const registerModal = document.getElementById('register-modal');
+const loginForm = document.getElementById('login-form');
+const registerForm = document.getElementById('register-form');
+const googleSignInBtn = document.getElementById('google-signin-btn');
+const logoutBtn = document.getElementById('logout-btn');
+
+const authButtonsDiv = document.getElementById('auth-buttons');
+const userProfileDiv = document.getElementById('user-profile');
+const userAvatarImg = document.getElementById('user-avatar-img');
+const userDropdown = document.getElementById('user-dropdown');
+
+// --- 互動視窗處理 ---
+function showLoginModal() {
+  if (loginModal) loginModal.style.display = 'block';
+  if (registerModal) registerModal.style.display = 'none'; // 確保註冊互動視窗隱藏
+}
+
+function showRegisterModal() {
+  if (registerModal) registerModal.style.display = 'block';
+  if (loginModal) loginModal.style.display = 'none'; // 確保登入互動視窗隱藏
+}
+
+function closeModals() {
+  if (loginModal) loginModal.style.display = 'none';
+  if (registerModal) registerModal.style.display = 'none';
+}
+
+// 點擊互動視窗外部時關閉
+window.onclick = function(event) {
+  if (event.target == loginModal && loginModal) {
+    loginModal.style.display = "none";
+  }
+  if (event.target == registerModal && registerModal) {
+    registerModal.style.display = "none";
+  }
+  // 如果點擊外部，則關閉下拉式選單
+  if (userProfileDiv && userProfileDiv.style.display === 'block' && !userProfileDiv.contains(event.target) && userDropdown) {
+      userDropdown.style.display = 'none';
+  }
+}
+
+function toggleUserDropdown() {
+    if (userDropdown) {
+        userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
     }
-  }
+}
 
-  // 显示登录模态框
-  function showLoginModal() {
-    document.getElementById('login-modal').style.display = 'block';
-  }
 
-  // 显示注册模态框
-  function showRegisterModal() {
-    document.getElementById('register-modal').style.display = 'block';
-  }
+// --- 驗證狀態觀察者 ---
+auth.onAuthStateChanged(async user => {
+  if (user) {
+    // 使用者已登入
+    console.log("使用者已登入:", user);
+    if (authButtonsDiv) authButtonsDiv.style.display = 'none';
+    if (userProfileDiv) userProfileDiv.style.display = 'block';
+    if (userAvatarImg) userAvatarImg.src = user.photoURL || './assets/images/avatar.jpg'; // 使用 Google 相片或預設圖片
 
-  // 关闭模态框
-  window.onclick = function(event) {
-    if (event.target.className === 'modal') {
-      event.target.style.display = 'none';
-    }
-  }
+    // 如果其他頁面立即需要，可將最基本的使用者資訊儲存在 localStorage
+    localStorage.setItem('userInfo', JSON.stringify({
+        uid: user.uid,
+        email: user.email,
+        displayName: user.displayName,
+        photoURL: user.photoURL
+    }));
 
-  // 处理登录
-  document.getElementById('login-form').addEventListener('submit', async (e) => {
+    await loadUserFavorites(user.uid); // 使用者登入後載入收藏
+    closeModals(); // 關閉任何開啟的驗證互動視窗
+
+  } else {
+    // 使用者已登出
+    console.log("使用者已登出");
+    if (authButtonsDiv) authButtonsDiv.style.display = 'flex';
+    if (userProfileDiv) userProfileDiv.style.display = 'none';
+    if (userDropdown) userDropdown.style.display = 'none'; // 登出時隱藏下拉式選單
+    localStorage.removeItem('userInfo');
+    // 登出時清除收藏圖示
+    document.querySelectorAll('.favorite-btn.active').forEach(btn => {
+        btn.classList.remove('active');
+        const icon = btn.querySelector('ion-icon') || btn.querySelector('i');
+        if (icon) {
+             if (icon.tagName.toLowerCase() === 'ion-icon') {
+                icon.name = 'heart-outline';
+             } else {
+                icon.className = 'fa-heart fa-regular';
+             }
+        }
+    });
+  }
+});
+
+// --- 表單事件監聽器 ---
+if (loginForm) {
+  loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const username = document.getElementById('login-username').value;
+    const email = document.getElementById('login-username').value; // 假設帳號欄位用於電子郵件
     const password = document.getElementById('login-password').value;
 
     try {
-      const response = await fetch('https://113-2tt2025.vercel.app/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userInfo', JSON.stringify(data.user));
-        document.getElementById('login-modal').style.display = 'none';
-        checkAuth();
-        alert('登入成功！');
-        window.location.href = 'user.html';
-      } else {
-        alert(data.message);
-      }
+      await auth.signInWithEmailAndPassword(email, password);
+      // onAuthStateChanged 將處理 UI 更新和關閉互動視窗
+      console.log("登入成功");
+      loginForm.reset();
     } catch (error) {
-      alert('登入失敗，請稍後重試');
+      console.error("登入錯誤:", error);
+      alert(`登入失敗：${error.message}`);
     }
   });
+}
 
-  // 处理注册
-  document.getElementById('register-form').addEventListener('submit', async (e) => {
+if (registerForm) {
+  registerForm.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const username = document.getElementById('register-username').value;
+    const email = document.getElementById('register-username').value; // 假設帳號欄位用於電子郵件
     const password = document.getElementById('register-password').value;
 
-    // 可選：檢查用戶名和密碼長度
-    if (username.length < 3 || username.length > 20) {
-      alert('用戶名長度需為3~20字元');
-      return;
-    }
-    if (password.length < 6 || password.length > 30) {
-      alert('密碼長度需為6~30字元');
+    // 基本驗證（可選，視需要新增更多）
+    if (password.length < 6) {
+      alert('密碼長度需至少6個字元');
       return;
     }
 
     try {
-      const response = await fetch('https://113-2tt2025.vercel.app/api/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
+      const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+      console.log("註冊成功，使用者:", userCredential.user);
+      // 可選：如果收集了顯示名稱，則設定顯示名稱，或更新個人資料
+      // await userCredential.user.updateProfile({ displayName: "某個名稱" });
+
+      // 在 Firestore 中建立使用者文件（可選，但對於儲存特定於使用者的資料很有用）
+      await db.collection('users').doc(userCredential.user.uid).set({
+          email: userCredential.user.email,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          favorites: [] // 初始化收藏陣列
       });
 
-      const data = await response.json();
-      if (response.ok) {
-        alert('哇哇哇哇哇！你註冊成功了！快去登入吧！');
-        document.getElementById('register-modal').style.display = 'none';
-        showLoginModal();
-      } else {
-        alert(data.message);
-      }
+      alert('哇哇哇哇哇！您註冊成功了！系統將會自動登入');
+      registerForm.reset();
+      // onAuthStateChanged 將處理 UI 更新和關閉互動視窗
     } catch (error) {
-      alert('登入失敗，請稍後再試！');
+      console.error("註冊錯誤:", error);
+      alert(`註冊失敗：${error.message}`);
+    }
+  });
+}
+
+if (googleSignInBtn) {
+  googleSignInBtn.addEventListener('click', async () => {
+    try {
+      const result = await auth.signInWithPopup(googleProvider);
+      const user = result.user;
+      console.log("Google 登入成功，使用者:", user);
+
+      // 檢查這是否為新使用者
+      if (result.additionalUserInfo.isNewUser) {
+        // 為新的 Google 使用者在 Firestore 中建立使用者文件
+        await db.collection('users').doc(user.uid).set({
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+            favorites: []
+        });
+      }
+      // onAuthStateChanged 將處理 UI 更新和關閉互動視窗
+    } catch (error) {
+      console.error("Google 登入錯誤:", error);
+      let errorMessage = `Google 登入失敗：${error.message}`;
+      if (error.code === 'auth/popup-closed-by-user') {
+        errorMessage = 'Google 登入視窗已關閉。';
+      } else if (error.code === 'auth/cancelled-popup-request') {
+        errorMessage = 'Google 登入請求已取消（可能是因為開啟了多個視窗）。';
+      }
+      alert(errorMessage);
+    }
+  });
+}
+
+if (logoutBtn) {
+  logoutBtn.addEventListener('click', async () => {
+    try {
+      await auth.signOut();
+      console.log("登出成功");
+      // onAuthStateChanged 將處理 UI 更新
+    } catch (error) {
+      console.error("登出錯誤:", error);
+      alert(`登出失敗：${error.message}`);
+    }
+  });
+}
+
+
+// --- Firestore 收藏電影 ---
+async function toggleFavorite(button, movieId, movieTitle, movieImage, movieUrl) { // 新增 movieUrl
+  const currentUser = auth.currentUser;
+  if (!currentUser) {
+    alert("請先登入才能收藏電影！");
+    showLoginModal();
+    return;
+  }
+
+  const userDocRef = db.collection('users').doc(currentUser.uid);
+  const icon = button.querySelector('ion-icon') || button.querySelector('i'); // 處理兩種圖示類型
+
+  try {
+    const userDoc = await userDocRef.get();
+    let favorites = [];
+    if (userDoc.exists && userDoc.data().favorites) {
+      favorites = userDoc.data().favorites;
+    } else if (!userDoc.exists) {
+      // 如果使用者文件不存在（例如，在新增收藏欄位之前的舊使用者），則建立它
+      await userDocRef.set({ email: currentUser.email, favorites: [] }, { merge: true });
+    }
+
+    const movieData = { id: movieId, title: movieTitle, image: movieImage, url: movieUrl }; // movieId 現在是像 'movie-details-13.html'
+    const isFavorite = favorites.some(fav => fav.id === movieId);
+
+    if (isFavorite) {
+      // 從收藏中移除
+      await userDocRef.update({
+        favorites: firebase.firestore.FieldValue.arrayRemove(favorites.find(fav => fav.id === movieId))
+      });
+      if (icon) {
+          if (icon.tagName.toLowerCase() === 'ion-icon') {
+            icon.name = 'heart-outline';
+          } else {
+            icon.className = 'fa-heart fa-regular';
+          }
+      }
+      button.classList.remove('active');
+      console.log(`電影 ${movieId} 已從收藏中移除`);
+    } else {
+      // 加入收藏
+      await userDocRef.update({
+        favorites: firebase.firestore.FieldValue.arrayUnion(movieData)
+      });
+      if (icon) {
+          if (icon.tagName.toLowerCase() === 'ion-icon') {
+            icon.name = 'heart';
+          } else {
+            icon.className = 'fa-heart fa-solid';
+          }
+      }
+      button.classList.add('active');
+      console.log(`電影 ${movieId} 已加入收藏`);
+    }
+  } catch (error) {
+    console.error("切換收藏錯誤:", error);
+    alert("操作收藏失敗，請稍後再試！");
+  }
+}
+
+async function loadUserFavorites(uid) {
+  if (!uid) return;
+  try {
+    const userDocRef = db.collection('users').doc(uid);
+    const userDoc = await userDocRef.get();
+
+    if (userDoc.exists && userDoc.data().favorites) {
+      const favorites = userDoc.data().favorites;
+      document.querySelectorAll('.movie-card').forEach(card => {
+        const movieLink = card.querySelector('a[href^="./movie-details-"]');
+        if (!movieLink) return;
+
+        const movieId = movieLink.getAttribute('href').substring(2); // 例如：movie-details-13.html
+        const favButton = card.querySelector('.favorite-btn');
+        if (!favButton) return;
+
+        const isFav = favorites.some(fav => fav.id === movieId);
+        const icon = favButton.querySelector('ion-icon') || favButton.querySelector('i');
+
+        if (isFav) {
+          favButton.classList.add('active');
+          if (icon) {
+            if (icon.tagName.toLowerCase() === 'ion-icon') {
+                icon.name = 'heart';
+            } else {
+                icon.className = 'fa-heart fa-solid';
+            }
+          }
+        } else {
+          favButton.classList.remove('active');
+          if (icon) {
+            if (icon.tagName.toLowerCase() === 'ion-icon') {
+                icon.name = 'heart-outline';
+            } else {
+                icon.className = 'fa-heart fa-regular';
+            }
+          }
+        }
+      });
+    }
+  } catch (error) {
+    console.error("載入收藏錯誤:", error);
+  }
+}
+
+// --- 動態新增收藏按鈕並附加事件監聽器 ---
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.movie-card').forEach(function(card) {
+    const cardMeta = card.querySelector('.card-meta'); // 目標 .card-meta 以放置按鈕
+    if (!cardMeta) {
+        console.warn("找不到電影卡的 card meta:", card);
+        return;
+    }
+
+    // 提取電影詳細資訊
+    const titleElement = card.querySelector('.card-title');
+    const movieTitle = titleElement ? titleElement.textContent.trim() : '未知標題';
+
+    const linkElement = card.querySelector('a[href^="./movie-details-"]');
+    const movieUrl = linkElement ? linkElement.getAttribute('href') : null; // 完整的 URL，例如 ./movie-details-02.html
+    const movieId = movieUrl ? movieUrl.substring(2) : null; // 例如 movie-details-02.html
+
+    const imageElement = card.querySelector('.card-banner img');
+    const movieImage = imageElement ? imageElement.getAttribute('src') : null;
+
+    if (!movieId || !movieImage || !movieUrl) { // 檢查 movieUrl
+        console.warn("無法提取 movieId, movieImage, 或 movieUrl:", card);
+        return;
+    }
+
+    // 檢查是否已存在收藏按鈕以避免重複
+    if (card.querySelector('.favorite-btn')) return;
+
+    const btn = document.createElement('button');
+    btn.className = 'favorite-btn';
+    // 根據您現有的結構使用 Font Awesome 圖示。
+    // 如果您想要 ion-icon，請將其更改為 <ion-icon name="heart-outline"></ion-icon>
+    btn.innerHTML = '<i class="fa-heart fa-regular"></i>';
+    btn.style.marginLeft = '8px'; // 根據需要調整樣式
+    btn.style.background = 'none';
+    btn.style.border = 'none';
+    btn.style.color = 'var(--white)'; // 或您想要的預設顏色
+    btn.style.cursor = 'pointer';
+    btn.style.padding = '0'; // 移除預設 padding
+    btn.style.lineHeight = '1'; // 確保圖示垂直居中
+
+    const icon = btn.querySelector('i');
+    if (icon) { // 確保圖示存在
+        icon.style.fontSize = '1.5rem'; // 範例大小，與您原先 ion-icon 大小一致
+        icon.style.verticalAlign = 'middle'; // 嘗試垂直對齊
+    }
+
+
+    btn.addEventListener('click', function(e) {
+      e.preventDefault(); // 如果按鈕在 <a> 內，則防止連結導覽
+      e.stopPropagation(); // 防止事件冒泡
+      toggleFavorite(this, movieId, movieTitle, movieImage, movieUrl); // 傳遞 movieUrl
+    });
+
+    // 將按鈕插入 .card-meta div 中
+    // 例如，在評分或時長之後
+    const ratingDiv = cardMeta.querySelector('.rating');
+    if (ratingDiv && ratingDiv.nextSibling) { // 確保 ratingDiv 和它的下一個兄弟節點存在
+        ratingDiv.parentNode.insertBefore(btn, ratingDiv.nextSibling);
+    } else if (ratingDiv) { // 如果 ratingDiv 是最後一個元素
+        ratingDiv.parentNode.appendChild(btn);
+    }
+    else { // 如果沒有評分 div，作為備用
+        cardMeta.appendChild(btn);
     }
   });
 
-  // 处理收藏
-  async function toggleFavorite(button, movieId) {
-    const token = localStorage.getItem('token');
-    if (!token) {
-      showLoginModal();
-      return;
-    }
-
-    const icon = button.querySelector('ion-icon');
-    const isFavorite = icon.name === 'heart';
-
-    try {
-      const response = await fetch('https://113-2tt2025.vercel.app/', {
-        method: isFavorite ? 'DELETE' : 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ movieId })
-      });
-
-      if (response.ok) {
-        icon.name = isFavorite ? 'heart-outline' : 'heart';
-        icon.style.color = isFavorite ? 'inherit' : '#f58bac';
-      }
-    } catch (error) {
-      alert('操作失敗，請稍後再試！');
-    }
+  // 初始檢查已登入使用者以載入收藏
+  // 這會在 onAuthStateChanged 中處理，但如果DOMContentLoaded先觸發，也可以在這裡檢查
+  const currentUser = auth.currentUser;
+  if (currentUser) {
+    loadUserFavorites(currentUser.uid);
   }
+});
 
-  // 页面加载时检查登录状态
-  document.addEventListener('DOMContentLoaded', checkAuth);
-  </script>
+// 頁面載入時初始呼叫以檢查驗證狀態（已由 onAuthStateChanged 處理）
+// 不需要單獨的 checkAuth() 函數，因為 onAuthStateChanged 會處理它。
+</script>
 
   <style>
   .modal {
@@ -3618,11 +3883,7 @@
   }
   </style>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-  <!-- 您的其他 script 將會放在這裡的上方或下方，視需求而定 -->
+
 </body>
 
 </html>
