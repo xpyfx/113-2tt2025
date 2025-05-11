@@ -4,6 +4,8 @@
   padding: 2rem 0;
 }
 
+.user-logo {margin: top 133px;}
+
 .sidebar {
   width: 250px;
   flex-shrink: 0;
