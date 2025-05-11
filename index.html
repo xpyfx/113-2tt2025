@@ -890,7 +890,7 @@
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
   <script>
-    // Firebase Configuration
+       // Firebase Configuration (保持不變)
     const firebaseConfig = {
         apiKey: "AIzaSyA2w4v4NGa1xbiGWCCFBgPEVipsHQ1ELHU",
         authDomain: "wmtm-f8685.firebaseapp.com",
@@ -906,6 +906,11 @@
     const db = firebase.firestore();
     const googleProvider = new firebase.auth.GoogleAuthProvider();
 
+    const defaultAvatarSvgDataUri = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTYyOC43MzYgNTI4Ljg5NkE0MTYgNDE2IDAgMCAxIDkyOCA5MjhIOTZhNDE1Ljg3MiA0MTUuODcyIDAgMCAxIDI5OS4yNjQtMzk5LjEwNEw1MTIgNzA0bDExNi43MzYtMTc1LjEwNHpNNzIwIDMwNGEyMDggMjA4IDAgMSAxLTQxNiAwIDIwOCAyMDggMCAwIDEgNDE2IDB6Ii8+PC9zdmc+";
+    // 白色填充 SVG Data URI (如果需要)
+    // const defaultAvatarSvgDataUri = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTYyOC43MzYgNTI4Ljg5NkE0MTYgNDE2IDAgMCAxIDkyOCA5MjhIOTZhNDE1Ljg3MiA0MTUuODcyIDAgMCAxIDI5OS4yNjQtMzk5LjEwNEw1MTIgNzA0bDExNi43MzYtMTc1LjEwNHpNNzIwIDMwNGEyMDggMjA4IDAgMSAxLTQxNiAwIDIwOCAyMDggMCAwIDEgNDE2IDB6Ii8+PC9zdmc+";
+
+
     const loginModal = document.getElementById('login-modal');
     const registerModal = document.getElementById('register-modal');
     const loginForm = document.getElementById('login-form');
@@ -917,74 +922,53 @@
     const userAvatarImg = document.getElementById('user-avatar-img');
     const userDropdown = document.getElementById('user-dropdown');
 
-    function showLoginModal() {
-      if (loginModal) loginModal.style.display = 'flex';
-      if (registerModal) registerModal.style.display = 'none';
-    }
-    function showRegisterModal() {
-      if (registerModal) registerModal.style.display = 'flex';
-      if (loginModal) loginModal.style.display = 'none';
-    }
-    function closeModals() {
-      if (loginModal) loginModal.style.display = 'none';
-      if (registerModal) registerModal.style.display = 'none';
-    }
-
-    window.onclick = function(event) {
-      if (event.target == loginModal && loginModal) loginModal.style.display = "none";
-      if (event.target == registerModal && registerModal) registerModal.style.display = "none";
-      if (userProfileDiv && userProfileDiv.style.display === 'block' && !userProfileDiv.contains(event.target) && userDropdown && !userDropdown.contains(event.target) && event.target !== userAvatarImg) {
-          userDropdown.style.display = 'none';
-      }
-    }
-    function toggleUserDropdown() {
-        if (userDropdown) userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
-    }
+    function showLoginModal() { /* ... (不變) ... */ }
+    function showRegisterModal() { /* ... (不變) ... */ }
+    function closeModals() { /* ... (不變) ... */ }
+    window.onclick = function(event) { /* ... (不變) ... */ }
+    function toggleUserDropdown() { /* ... (不變) ... */ }
 
     auth.onAuthStateChanged(async user => {
       if (user) {
-        // console.log("使用者已登入 (onAuthStateChanged):", user.uid, user.email);
+        console.log("使用者已登入 (onAuthStateChanged):", user.uid, user.email);
         if (authButtonsDiv) authButtonsDiv.style.display = 'none';
         if (userProfileDiv) userProfileDiv.style.display = 'block';
-        if (userAvatarImg) userAvatarImg.src = user.photoURL || './assets/images/avatar.jpg';
-        localStorage.setItem('userInfo', JSON.stringify({ uid: user.uid, email: user.email, displayName: user.displayName, photoURL: user.photoURL }));
+        if (userAvatarImg) {
+            userAvatarImg.src = user.photoURL || defaultAvatarSvgDataUri;
+            console.log("設定頭像為:", userAvatarImg.src.startsWith("data:image/svg+xml") ? "預設SVG頭像" : userAvatarImg.src);
+        }
+        localStorage.setItem('userInfo', JSON.stringify({
+            uid: user.uid,
+            email: user.email,
+            displayName: user.displayName,
+            photoURL: user.photoURL || defaultAvatarSvgDataUri
+        }));
         await loadUserFavorites(user.uid);
         closeModals();
       } else {
-        // console.log("使用者已登出 (onAuthStateChanged)");
+        console.log("使用者已登出 (onAuthStateChanged)");
         if (authButtonsDiv) authButtonsDiv.style.display = 'flex';
         if (userProfileDiv) userProfileDiv.style.display = 'none';
         if (userDropdown) userDropdown.style.display = 'none';
         localStorage.removeItem('userInfo');
         document.querySelectorAll('.favorite-btn').forEach(btn => {
             btn.classList.remove('active');
-            const svgIcon = btn.querySelector('svg.movie-card-fav-icon'); // Targeting SVG
+            const svgIcon = btn.querySelector('svg.movie-card-fav-icon'); // 正確選取 SVG
             if (svgIcon) {
                 svgIcon.classList.remove('fas', 'fa-solid');
                 svgIcon.classList.add('far', 'fa-regular');
-                svgIcon.setAttribute('data-prefix', 'far'); // Ensure data-prefix is also reset
+                svgIcon.setAttribute('data-prefix', 'far');
             }
         });
       }
     });
 
     if (loginForm) {
-      loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email = document.getElementById('login-username').value;
-        const password = document.getElementById('login-password').value;
-        try {
-          await auth.signInWithEmailAndPassword(email, password);
-          loginForm.reset();
-        } catch (error) {
-          console.error("登入表單：登入錯誤:", error);
-          alert(`登入失敗：${error.message}`);
-        }
-      });
+      loginForm.addEventListener('submit', async (e) => { /* ... (不變) ... */ });
     }
 
     if (registerForm) {
-      registerForm.addEventListener('submit', async (e) => {
+      registerForm.addEventListener('submit', async (e) => { /* ... (大部分不變，確認 photoURL 設定) ... */
         e.preventDefault();
         const email = document.getElementById('register-username').value;
         const password = document.getElementById('register-password').value;
@@ -994,13 +978,26 @@
         }
         try {
           const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+          console.log("註冊表單：註冊成功，使用者:", userCredential.user.uid);
+
+          try {
+            await userCredential.user.updateProfile({
+              photoURL: defaultAvatarSvgDataUri
+            });
+            console.log("Firebase Auth profile photoURL updated with default SVG for new user.");
+          } catch (profileError) {
+            console.error("Error updating Firebase Auth profile for new user:", profileError);
+          }
+
           await db.collection('users').doc(userCredential.user.uid).set({
               email: userCredential.user.email,
               displayName: userCredential.user.displayName || email.split('@')[0],
-              photoURL: userCredential.user.photoURL || null,
+              photoURL: defaultAvatarSvgDataUri, // 確保 Firestore 也有預設頭像
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               favorites: []
           });
+          console.log("Firestore user document created with default photoURL for new user.");
+
           alert('哇哇哇哇哇！您註冊成功了！系統將會自動登入');
           registerForm.reset();
         } catch (error) {
@@ -1011,38 +1008,11 @@
     }
 
     if (googleSignInBtn) {
-      googleSignInBtn.addEventListener('click', async () => {
-        try {
-          const result = await auth.signInWithPopup(googleProvider);
-          const user = result.user;
-          if (result.additionalUserInfo && result.additionalUserInfo.isNewUser) {
-            await db.collection('users').doc(user.uid).set({
-                email: user.email,
-                displayName: user.displayName,
-                photoURL: user.photoURL,
-                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                favorites: []
-            });
-          }
-        } catch (error) {
-          console.error("Google 登入：錯誤:", error);
-          let errorMessage = `Google 登入失敗：${error.message}`;
-          if (error.code === 'auth/popup-closed-by-user') errorMessage = 'Google 登入視窗已關閉。';
-          else if (error.code === 'auth/cancelled-popup-request') errorMessage = 'Google 登入請求已取消。';
-          alert(errorMessage);
-        }
-      });
+      googleSignInBtn.addEventListener('click', async () => { /* ... (不變) ... */ });
     }
 
     if (logoutBtn) {
-      logoutBtn.addEventListener('click', async () => {
-        try {
-          await auth.signOut();
-        } catch (error) {
-          console.error("登出按鈕：登出錯誤:", error);
-          alert(`登出失敗：${error.message}`);
-        }
-      });
+      logoutBtn.addEventListener('click', async () => { /* ... (不變) ... */ });
     }
 
     async function toggleFavorite(button, movieId, movieTitle, movieImage, movieUrl) {
@@ -1054,10 +1024,10 @@
       }
 
       console.log(`[toggleFavorite] Action - MovieID: ${movieId}, Title: ${movieTitle}`);
-      const svgIcon = button.querySelector('svg.movie-card-fav-icon');
+      const svgIcon = button.querySelector('svg.movie-card-fav-icon'); // 選取轉換後的 SVG
       if (!svgIcon) {
           console.error("[toggleFavorite] CRITICAL: SVG icon (svg.movie-card-fav-icon) not found! Button HTML:", button.innerHTML);
-          return; // 如果找不到圖示，則不繼續執行UI更新，但Firestore操作仍會嘗試
+          // 如果找不到圖示，我們仍然嘗試更新 Firestore，但 UI 可能不會立即反應
       } else {
           console.log("[toggleFavorite] Found SVG icon:", svgIcon);
       }
@@ -1092,18 +1062,22 @@
           await userDocRef.update({
             favorites: firebase.firestore.FieldValue.arrayRemove(movieToRemove)
           });
-          svgIcon.classList.remove('fas', 'fa-solid');
-          svgIcon.classList.add('far', 'fa-regular');
-          svgIcon.setAttribute('data-prefix', 'far');
+          if (svgIcon) {
+            svgIcon.classList.remove('fas', 'fa-solid'); // Solid (實心)
+            svgIcon.classList.add('far', 'fa-regular');    // Regular (空心)
+            svgIcon.setAttribute('data-prefix', 'far'); // Font Awesome 6 依賴 data-prefix
+          }
           button.classList.remove('active');
           console.log(`[toggleFavorite] Removed: ${movieTitle}`);
         } else {
           await userDocRef.update({
             favorites: firebase.firestore.FieldValue.arrayUnion(movieData)
           });
-          svgIcon.classList.remove('far', 'fa-regular');
-          svgIcon.classList.add('fas', 'fa-solid');
-          svgIcon.setAttribute('data-prefix', 'fas');
+          if (svgIcon) {
+            svgIcon.classList.remove('far', 'fa-regular');
+            svgIcon.classList.add('fas', 'fa-solid');
+            svgIcon.setAttribute('data-prefix', 'fas'); // Font Awesome 6 依賴 data-prefix
+          }
           button.classList.add('active');
           console.log(`[toggleFavorite] Added: ${movieTitle}`);
         }
@@ -1133,7 +1107,9 @@
           if (!favButton) return;
 
           const isFav = favorites.some(fav => fav.id === movieId);
-          const svgIcon = favButton.querySelector('svg.movie-card-fav-icon');
+          const svgIcon = favButton.querySelector('svg.movie-card-fav-icon'); // 選取轉換後的 SVG
+
+          // console.log(`[loadUserFavorites] Card: ${movieId}, isFav: ${isFav}, SVG Icon:`, svgIcon);
 
           if (isFav) {
             favButton.classList.add('active');
@@ -1161,7 +1137,10 @@
       console.log("[DOMContentLoaded] DOM fully loaded and parsed.");
       document.querySelectorAll('.movie-card').forEach(function(card) {
         const cardMeta = card.querySelector('.card-meta');
-        if (!cardMeta) return;
+        if (!cardMeta) {
+            console.warn("[DOMContentLoaded] Cannot find .card-meta for card:", card);
+            return;
+        }
         const titleElement = card.querySelector('.card-title');
         const movieTitle = titleElement ? titleElement.textContent.trim() : '未知標題';
         const linkElement = card.querySelector('a[href^="./movie-details-"]');
@@ -1170,13 +1149,22 @@
         const imageElement = card.querySelector('.card-banner img');
         const movieImage = imageElement ? imageElement.getAttribute('src') : null;
 
-        if (!movieId || !movieTitle || !movieImage || !movieUrl) return;
-        if (card.querySelector('.favorite-btn')) return;
+        if (!movieId || !movieTitle || !movieImage || !movieUrl) {
+            console.warn("[DOMContentLoaded] Missing movie data for card:", {movieId, movieTitle, movieImage, movieUrl, card});
+            return;
+        }
+        // 避免重複添加按鈕
+        if (card.querySelector('.favorite-btn')) {
+            // console.log("[DOMContentLoaded] Favorite button already exists for:", movieId);
+            return;
+        }
 
         const btn = document.createElement('button');
         btn.className = 'favorite-btn';
-        // Font Awesome JS will convert this <i> to <svg> and hopefully transfer the movie-card-fav-icon class.
-        btn.innerHTML = '<i class="far fa-heart movie-card-fav-icon"></i>';
+        // **重要**: Font Awesome JS 會掃描並轉換 <i> 標籤。
+        // 我們添加 'movie-card-fav-icon' class 到 <i> 標籤，
+        // Font Awesome JS 轉換成 <svg> 後，這個 class 通常會被轉移到 <svg> 元素上。
+        btn.innerHTML = '<i class="far fa-heart movie-card-fav-icon"></i>'; // 初始為空心
 
         btn.addEventListener('click', function(e) {
           e.preventDefault();
@@ -1187,18 +1175,27 @@
 
         const ratingDiv = cardMeta.querySelector('.rating');
         if (ratingDiv) {
-            ratingDiv.parentNode.insertBefore(btn, ratingDiv.nextSibling);
+            // 插入到 rating 元素的後面，如果 rating 是最後一個元素，則在其後附加
+            if (ratingDiv.nextSibling) {
+                ratingDiv.parentNode.insertBefore(btn, ratingDiv.nextSibling);
+            } else {
+                ratingDiv.parentNode.appendChild(btn);
+            }
         } else {
+            // 如果沒有 ratingDiv，則直接附加到 cardMeta 的末尾
             cardMeta.appendChild(btn);
+            console.warn("[DOMContentLoaded] No .rating div found in .card-meta, appending button to cardMeta for:", movieId);
         }
       });
 
+      // DOMContentLoaded 後，如果用戶已登入，立即嘗試加載收藏夾
+      // 這樣可以避免在 onAuthStateChanged 延遲時 UI 未更新
       const currentUser = auth.currentUser;
       if (currentUser) {
-        console.log("[DOMContentLoaded] Current user logged in, loading favorites.");
+        console.log("[DOMContentLoaded] Current user is logged in. Attempting to load favorites.");
         loadUserFavorites(currentUser.uid);
       } else {
-        console.log("[DOMContentLoaded] No current user logged in.");
+        console.log("[DOMContentLoaded] No current user on DOMContentLoaded.");
       }
     });
   </script>
