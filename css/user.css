@@ -12,6 +12,9 @@ img.user-logo {
   flex-shrink: 0;
 }
 
+main {
+  margin-top:140px;
+}
 .user-nav ul {
   list-style: none;
   padding: 0;
