@@ -1,25 +1,201 @@
 <!DOCTYPE html>
-<!--Anastasia version--> 
-<html lang="zh-TW">
+<html lang="zh-Hant">
+<!-- Anastasia version -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>個人頁面</title>
+  <title>個人頁面 - 電影告訴我的事</title>
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/new.css">
   <link rel="stylesheet" href="./css/user.css">
+  <link rel="shortcut icon" href="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/LOGO.png?v=1718046694177" type="image/svg+xml">
+  <!-- Font Awesome (如果頁首或其他地方也需要) -->
+  <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+
+  <style>
+    /* 您 user.html 特有的樣式可以放在這裡，或者在 user.css 中 */
+    body {
+      font-family: 'Poppins', sans-serif; /* 確保字體一致性 */
+      background-color: var(--eerie-black-1); /* 與 index.html 背景色一致 */
+      color: var(--white);
+      margin: 0;
+      padding: 0;
+    }
+    .header { /* 簡化頁首樣式，可以從 style.css 或 new.css 繼承 */
+      background-color: var(--eerie-black-2);
+      padding: 1rem 0;
+      border-bottom: 1px solid var(--jet);
+    }
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo img {
+      height: 40px; /* 調整 Logo 大小 */
+    }
+    .navbar-actions .user-profile {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid var(--citrine); /* 給頭像加個邊框 */
+    }
+    .user-dropdown {
+      display: none; /* 由 JS 控制顯示 */
+      position: absolute;
+      top: calc(100% + 10px); /* 與 index.html 一致 */
+      right: 0;
+      background-color: var(--eerie-black-1);
+      border: 1px solid var(--jet);
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      z-index: 100;
+      min-width: 120px;
+    }
+    .user-dropdown.show { /* 用於 JS 切換 */
+        display: block;
+    }
+    .logout-btn {
+      background-color: var(--radical-red); /* 使用變數 */
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 14px;
+      text-align: center;
+    }
+    .logout-btn:hover {
+      background-color: hsl(340, 82%, 50%); /* 稍微調暗紅色 */
+    }
+
+    /* 主內容區域樣式 */
+    .user-content {
+      display: flex;
+      margin-top: 2rem;
+      gap: 2rem;
+    }
+    .sidebar {
+      flex: 0 0 200px; /* 固定寬度 */
+      background-color: var(--eerie-black-2);
+      padding: 1.5rem;
+      border-radius: 8px;
+    }
+    .user-nav ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .user-nav li a {
+      display: block;
+      padding: 0.8rem 1rem;
+      color: var(--light-gray);
+      text-decoration: none;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .user-nav li a:hover,
+    .user-nav li a.active {
+      background-color: var(--citrine);
+      color: var(--eerie-black-1);
+    }
+    .main-content {
+      flex-grow: 1;
+    }
+    .profile-section, .favorites-section {
+      background-color: var(--eerie-black-2);
+      padding: 2rem;
+      border-radius: 8px;
+      margin-bottom: 2rem;
+    }
+    .profile-section h2, .favorites-section h2 {
+      color: var(--citrine);
+      margin-top: 0;
+      border-bottom: 1px solid var(--jet);
+      padding-bottom: 0.8rem;
+      margin-bottom: 1.5rem;
+    }
+    .profile-info .info-item {
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+    }
+    .profile-info .info-item label {
+      font-weight: 600;
+      color: var(--gray-x);
+      min-width: 100px; /* 標籤對齊 */
+    }
+    .profile-info .info-item span {
+      color: var(--white);
+    }
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 響應式網格 */
+      gap: 1.5rem;
+    }
+    /* 從 index.html 複製過來的 movie-card 樣式 (如果需要，可以放在 user.css) */
+    .movie-card {
+      background-color: var(--eerie-black-2); /* Or your card background */
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .movie-card:hover {
+      transform: translateY(-5px);
+    }
+    .card-banner img {
+      width: 100%;
+      height: auto; /* 或固定高度，如 270px */
+      object-fit: cover;
+      display: block;
+    }
+    .title-wrapper {
+      padding: 1rem;
+    }
+    .card-title {
+      color: var(--white);
+      font-size: 1rem; /* 調整字體大小 */
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .title-wrapper a {
+        text-decoration: none;
+    }
+    .title-wrapper a:hover .card-title {
+        color: var(--citrine);
+    }
+
+  </style>
 </head>
 <body>
   <header class="header">
     <div class="container">
-      <div class="navbar">
+      <div class="navbar"> <!-- 簡化了 header 結構 -->
         <a href="./index.html" class="logo">
-          <img src="./assets/images/logo.svg" alt="Film logo">
+          <img src="./assets/images/logo.svg" alt="網站 Logo"> <!-- 確認路徑 -->
         </a>
         <div class="navbar-actions">
-          <div class="user-profile">
-            <img src="./assets/images/avatar.jpg" alt="用戶頭像" class="avatar">
-            <div class="user-dropdown">
+          <div id="user-profile-display" class="user-profile" style="display: none;"> <!-- 用於 JS 控制顯示 -->
+            <img src="./assets/images/avatar.jpg" alt="用戶頭像" class="avatar" id="user-avatar"> <!-- 確認路徑 -->
+            <div id="user-menu-dropdown" class="user-dropdown"> <!-- 添加 ID -->
               <button id="logoutBtn" class="logout-btn">登出</button>
             </div>
           </div>
@@ -34,23 +210,27 @@
         <div class="sidebar">
           <nav class="user-nav">
             <ul>
-              <li><a href="#profile" class="active">個人資料</a></li>
-              <li><a href="#favorites">我的收藏</a></li>
+              <li><a href="#profile" id="nav-profile" class="active">個人資料</a></li>
+              <li><a href="#favorites" id="nav-favorites">我的收藏</a></li>
             </ul>
           </nav>
         </div>
 
         <div class="main-content">
-          <section id="profile" class="profile-section">
+          <section id="profile" class="profile-section active-section"> <!-- 初始顯示個人資料 -->
             <h2>個人資料</h2>
             <div class="profile-info">
               <div class="info-item">
-                <label>用戶名</label>
-                <span id="username"></span>
+                <label>用戶名:</label>
+                <span id="username-display">載入中...</span>
               </div>
               <div class="info-item">
-                <label>註冊時間</label>
-                <span id="register-date"></span>
+                <label>電子郵件:</label>
+                <span id="email-display">載入中...</span>
+              </div>
+              <div class="info-item">
+                <label>註冊時間:</label>
+                <span id="register-date-display">載入中...</span>
               </div>
             </div>
           </section>
@@ -58,7 +238,8 @@
           <section id="favorites" class="favorites-section">
             <h2>我的收藏</h2>
             <div class="movie-grid" id="favorites-grid">
-              <!-- 收藏的电影将在这里动态显示 -->
+              <!-- 收藏的電影將在這裡動態顯示 -->
+              <p>載入收藏中...</p>
             </div>
           </section>
         </div>
@@ -67,99 +248,220 @@
   </main>
 
   <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    // 檢查用戶是否已登入
-    const token = localStorage.getItem('token');
-    if (!token) {
-      window.location.href = 'index.html';
-      return;
-    }
+    // Firebase Configuration
+    const firebaseConfig = {
+        apiKey: "AIzaSyA2w4v4NGa1xbiGWCCFBgPEVipsHQ1ELHU",
+        authDomain: "wmtm-f8685.firebaseapp.com",
+        projectId: "wmtm-f8685",
+        storageBucket: "wmtm-f8685.appspot.com",
+        messagingSenderId: "576339094208",
+        appId: "1:576339094208:web:2725b0d1d34fd0d72c9b25",
+        measurementId: "G-0CS1G6YJGD"
+    };
 
-    // 登出功能
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-      localStorage.removeItem('token');
-      window.location.href = 'index.html';
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const defaultAvatarSvgDataUri = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTYyOC43MzYgNTI4Ljg5NkE0MTYgNDE2IDAgMCAxIDkyOCA5MjhIOTZhNDE1Ljg3MiA0MTUuODcyIDAgMCAxIDI5OS4yNjQtMzk5LjEwNEw1MTIgNzA0bDExNi43MzYtMTc1LjEwNHpNNzIwIDMwNGEyMDggMjA4IDAgMSAxLTQxNiAwIDIwOCAyMDggMCAwIDEgNDE2IDB6Ii8+PC9zdmc+";
+
+    document.addEventListener('DOMContentLoaded', function() {
+      const userProfileDisplay = document.getElementById('user-profile-display');
+      const userAvatarElement = document.getElementById('user-avatar');
+      const userMenuDropdown = document.getElementById('user-menu-dropdown');
+
+      const usernameDisplayElement = document.getElementById('username-display');
+      const emailDisplayElement = document.getElementById('email-display');
+      const registerDateDisplayElement = document.getElementById('register-date-display');
+      const favoritesGrid = document.getElementById('favorites-grid');
+      const logoutBtn = document.getElementById('logoutBtn');
+
+      const navProfile = document.getElementById('nav-profile');
+      const navFavorites = document.getElementById('nav-favorites');
+      const profileSection = document.getElementById('profile');
+      const favoritesSection = document.getElementById('favorites');
+
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', function() {
+          auth.signOut().then(() => {
+            localStorage.removeItem('userInfo');
+            window.location.href = 'index.html';
+          }).catch(error => {
+            console.error("登出失敗:", error);
+            alert("登出時發生錯誤，請稍後再試。");
+          });
+        });
+      }
+
+      if (userAvatarElement) {
+        userAvatarElement.addEventListener('click', function(event) {
+          event.stopPropagation();
+          if (userMenuDropdown) {
+            userMenuDropdown.classList.toggle('show');
+          }
+        });
+      }
+
+      window.addEventListener('click', function(event) {
+        if (userMenuDropdown && userMenuDropdown.classList.contains('show') && !userAvatarElement.contains(event.target) && !userMenuDropdown.contains(event.target)) {
+          userMenuDropdown.classList.remove('show');
+        }
+      });
+
+      // 導航切換
+      function showSection(sectionId) {
+        profileSection.style.display = 'none';
+        favoritesSection.style.display = 'none';
+        navProfile.classList.remove('active');
+        navFavorites.classList.remove('active');
+
+        if (sectionId === 'profile') {
+          profileSection.style.display = 'block';
+          navProfile.classList.add('active');
+        } else if (sectionId === 'favorites') {
+          favoritesSection.style.display = 'block';
+          navFavorites.classList.add('active');
+        }
+      }
+
+      if (navProfile) {
+        navProfile.addEventListener('click', function(e) {
+          e.preventDefault();
+          showSection('profile');
+        });
+      }
+      if (navFavorites) {
+        navFavorites.addEventListener('click', function(e) {
+          e.preventDefault();
+          showSection('favorites');
+        });
+      }
+      // 初始顯示個人資料區塊
+      showSection('profile');
+
+
+      auth.onAuthStateChanged(async user => {
+        if (user) {
+          if (userProfileDisplay) userProfileDisplay.style.display = 'flex'; // 顯示頭像區域
+          console.log("user.html: 使用者已登入", user.uid);
+
+          if (userAvatarElement) {
+            userAvatarElement.src = user.photoURL || defaultAvatarSvgDataUri;
+          }
+
+          try {
+            const userDocRef = db.collection('users').doc(user.uid);
+            const doc = await userDocRef.get();
+
+            if (doc.exists) {
+              const userData = doc.data();
+              console.log("user.html: Firestore 使用者資料", userData);
+
+              if (usernameDisplayElement) {
+                usernameDisplayElement.textContent = userData.displayName || user.displayName || user.email.split('@')[0];
+              }
+              if (emailDisplayElement) {
+                emailDisplayElement.textContent = user.email;
+              }
+              if (registerDateDisplayElement && userData.createdAt && userData.createdAt.toDate) {
+                registerDateDisplayElement.textContent = userData.createdAt.toDate().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
+              } else if (registerDateDisplayElement) {
+                registerDateDisplayElement.textContent = "無法獲取";
+              }
+
+              if (favoritesGrid && Array.isArray(userData.favorites)) {
+                displayFavorites(userData.favorites);
+              } else if (favoritesGrid) {
+                favoritesGrid.innerHTML = '<p>您目前沒有任何收藏的電影。</p>';
+              }
+
+            } else {
+              console.warn("user.html: 在 Firestore 中找不到使用者文件:", user.uid);
+              if (usernameDisplayElement) usernameDisplayElement.textContent = user.email.split('@')[0];
+              if (emailDisplayElement) emailDisplayElement.textContent = user.email;
+              if (registerDateDisplayElement) registerDateDisplayElement.textContent = "未知";
+              if (favoritesGrid) favoritesGrid.innerHTML = '<p>無法載入使用者資訊。</p>';
+            }
+          } catch (error) {
+            console.error("user.html: 獲取 Firestore 使用者資訊失敗:", error);
+            if (usernameDisplayElement) usernameDisplayElement.textContent = "錯誤";
+            if (emailDisplayElement) emailDisplayElement.textContent = "錯誤";
+            if (registerDateDisplayElement) registerDateDisplayElement.textContent = "錯誤";
+            if (favoritesGrid) favoritesGrid.innerHTML = '<p>載入收藏時發生錯誤。</p>';
+          }
+
+        } else {
+          console.log("user.html: 使用者未登入，重導向至 index.html");
+          window.location.href = 'index.html';
+        }
+      });
     });
 
-    // 獲取用戶信息
-    async function fetchUserInfo() {
-      try {
-        const response = await fetch('http://localhost:3000/api/user', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const data = await response.json();
-        document.getElementById('username').textContent = data.username;
-        document.getElementById('register-date').textContent = new Date(data.createdAt).toLocaleDateString();
-      } catch (error) {
-        console.error('獲取用戶信息失敗:', error);
-      }
-    }
+    function displayFavorites(favorites) {
+      const favoritesGrid = document.getElementById('favorites-grid');
+      if (!favoritesGrid) return;
 
-    // 獲取收藏列表
-    async function fetchFavorites() {
-      try {
-        const response = await fetch('http://localhost:3000/api/favorites', {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        });
-        const favorites = await response.json();
-        const favoritesGrid = document.getElementById('favorites-grid');
-        favoritesGrid.innerHTML = favorites.map(movie => `
+      if (!favorites || favorites.length === 0) {
+        favoritesGrid.innerHTML = '<p>您目前沒有任何收藏的電影。</p>';
+        return;
+      }
+
+      favoritesGrid.innerHTML = favorites.map(movie => {
+        const imageUrl = movie.image || './assets/images/placeholder-movie.jpg';
+        const movieTitle = movie.title || '未知標題';
+        const movieUrl = movie.url || '#';
+
+        return `
           <div class="movie-card">
-            <a href="${movie.url}">
+            <a href="${movieUrl}" target="_blank"> <!-- 建議在新分頁開啟電影詳情 -->
               <figure class="card-banner">
-                <img src="${movie.image}" alt="${movie.title}">
+                <img src="${imageUrl}" alt="${movieTitle} 電影海報">
               </figure>
             </a>
             <div class="title-wrapper">
-              <h3 class="card-title">${movie.title}</h3>
+              <a href="${movieUrl}" target="_blank">
+                <h3 class="card-title">${movieTitle}</h3>
+              </a>
+              <!-- 可選: 加入 "從收藏移除" 按鈕 -->
+              <!-- <button class="remove-favorite-btn" data-movie-id="${movie.id}">移除收藏</button> -->
             </div>
           </div>
-        `).join('');
-      } catch (error) {
-        console.error('獲取收藏列表失敗:', error);
-      }
+        `;
+      }).join('');
+
+      // 如果您添加了 "從收藏移除" 按鈕，需要為它們綁定事件監聽器
+      // document.querySelectorAll('.remove-favorite-btn').forEach(button => {
+      //   button.addEventListener('click', async function() {
+      //     const movieIdToRemove = this.dataset.movieId;
+      //     const currentUser = auth.currentUser;
+      //     if (currentUser && movieIdToRemove) {
+      //       // 呼叫類似 toggleFavorite 的邏輯，但只執行移除
+      //       // ... 找到 movieToRemove 的完整物件，然後使用 arrayRemove ...
+      //       // 成功後重新調用 displayFavorites 或直接從 DOM 移除元素
+      //       console.log("嘗試移除電影:", movieIdToRemove);
+      //       // 這裡需要更完整的移除邏輯，參考 index.html 的 toggleFavorite
+      //       // 簡易範例: 重新載入收藏 (效率較低，但簡單)
+      //       const userDocRef = db.collection('users').doc(currentUser.uid);
+      //       const movieObject = favorites.find(fav => fav.id === movieIdToRemove);
+      //       if (movieObject) {
+      //         try {
+      //           await userDocRef.update({
+      //             favorites: firebase.firestore.FieldValue.arrayRemove(movieObject)
+      //           });
+      //           // 重新獲取並顯示收藏
+      //           const updatedDoc = await userDocRef.get();
+      //           if (updatedDoc.exists && updatedDoc.data() && Array.isArray(updatedDoc.data().favorites)) {
+      //             displayFavorites(updatedDoc.data().favorites);
+      //           }
+      //         } catch (err) {
+      //           console.error("從收藏移除失敗:", err);
+      //         }
+      //       }
+      //     }
+      //   });
+      // });
     }
-
-    fetchUserInfo();
-    fetchFavorites();
-  });
   </script>
-
-  <style>
-  .user-dropdown {
-    display: none;
-    position: absolute;
-    top: 100%;
-    right: 0;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-
-  .user-profile:hover .user-dropdown {
-    display: block;
-  }
-
-  .logout-btn {
-    background-color: #ff0000;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 14px;
-  }
-
-  .logout-btn:hover {
-    background-color: #cc0000;
-  }
-  </style>
 </body>
-</html> 
+</html>
