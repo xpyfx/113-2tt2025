@@ -9,27 +9,40 @@
   <link rel="stylesheet" href="./css/new.css">
   <link rel="stylesheet" href="./css/user.css">
   <link rel="shortcut icon" href="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/LOGO.png?v=1718046694177" type="image/svg+xml">
-  <!-- Font Awesome (如果頁首或其他地方也需要) -->
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
 
-  <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
 
   <style>
-    /* 您 user.html 特有的樣式可以放在這裡，或者在 user.css 中 */
+    :root {
+      --radical-red: #FF3366;
+      --white: #FFFFFF;
+      --light-gray: #CCCCCC;
+      --eerie-black-1: #1a1a1a;
+      --eerie-black-2: #2a2a2a;
+      --jet: #333333;
+      --custom-pink: #f5a8bc;
+      --custom-pink-hover: #ff7897;
+      --gray-x: #AAAAAA;
+    }
     body {
-      font-family: 'Poppins', sans-serif; /* 確保字體一致性 */
-      background-color: var(--eerie-black-1); /* 與 index.html 背景色一致 */
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--eerie-black-1);
       color: var(--white);
       margin: 0;
       padding: 0;
     }
-    .header { /* 簡化頁首樣式，可以從 style.css 或 new.css 繼承 */
+    .header {
       background-color: var(--eerie-black-2);
       padding: 1rem 0;
       border-bottom: 1px solid var(--jet);
+    }
+    .container {
+        width: 90%;
+        max-width: 1200px;
+        margin: 0 auto;
     }
     .navbar {
       display: flex;
@@ -37,7 +50,7 @@
       align-items: center;
     }
     .logo img {
-      height: 40px; /* 調整 Logo 大小 */
+      height: 40px;
     }
     .navbar-actions .user-profile {
       position: relative;
@@ -50,12 +63,12 @@
       border-radius: 50%;
       object-fit: cover;
       cursor: pointer;
-      border: 2px solid var(--citrine); /* 給頭像加個邊框 */
+      border: 2px solid var(--custom-pink);
     }
     .user-dropdown {
-      display: none; /* 由 JS 控制顯示 */
+      display: none;
       position: absolute;
-      top: calc(100% + 10px); /* 與 index.html 一致 */
+      top: calc(100% + 10px);
       right: 0;
       background-color: var(--eerie-black-1);
       border: 1px solid var(--jet);
@@ -65,11 +78,11 @@
       z-index: 100;
       min-width: 120px;
     }
-    .user-dropdown.show { /* 用於 JS 切換 */
+    .user-dropdown.show {
         display: block;
     }
     .logout-btn {
-      background-color: var(--radical-red); /* 使用變數 */
+      background-color: var(--radical-red);
       color: white;
       border: none;
       padding: 8px 16px;
@@ -80,17 +93,16 @@
       text-align: center;
     }
     .logout-btn:hover {
-      background-color: hsl(340, 82%, 50%); /* 稍微調暗紅色 */
+      background-color: hsl(340, 82%, 50%);
     }
 
-    /* 主內容區域樣式 */
     .user-content {
       display: flex;
       margin-top: 2rem;
       gap: 2rem;
     }
     .sidebar {
-      flex: 0 0 200px; /* 固定寬度 */
+      flex: 0 0 200px;
       background-color: var(--eerie-black-2);
       padding: 1.5rem;
       border-radius: 8px;
@@ -111,7 +123,7 @@
     }
     .user-nav li a:hover,
     .user-nav li a.active {
-      background-color: var(--citrine);
+      background-color: var(--custom-pink);
       color: var(--eerie-black-1);
     }
     .main-content {
@@ -124,7 +136,7 @@
       margin-bottom: 2rem;
     }
     .profile-section h2, .favorites-section h2 {
-      color: var(--citrine);
+      color: var(--custom-pink);
       margin-top: 0;
       border-bottom: 1px solid var(--jet);
       padding-bottom: 0.8rem;
@@ -138,19 +150,18 @@
     .profile-info .info-item label {
       font-weight: 600;
       color: var(--gray-x);
-      min-width: 100px; /* 標籤對齊 */
+      min-width: 100px;
     }
     .profile-info .info-item span {
       color: var(--white);
     }
     .movie-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); /* 響應式網格 */
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
       gap: 1.5rem;
     }
-    /* 從 index.html 複製過來的 movie-card 樣式 (如果需要，可以放在 user.css) */
     .movie-card {
-      background-color: var(--eerie-black-2); /* Or your card background */
+      background-color: var(--eerie-black-2);
       border-radius: 8px;
       overflow: hidden;
       box-shadow: 0 4px 8px rgba(0,0,0,0.1);
@@ -161,7 +172,7 @@
     }
     .card-banner img {
       width: 100%;
-      height: auto; /* 或固定高度，如 270px */
+      height: auto;
       object-fit: cover;
       display: block;
     }
@@ -170,7 +181,7 @@
     }
     .card-title {
       color: var(--white);
-      font-size: 1rem; /* 調整字體大小 */
+      font-size: 1rem;
       margin: 0;
       white-space: nowrap;
       overflow: hidden;
@@ -180,22 +191,21 @@
         text-decoration: none;
     }
     .title-wrapper a:hover .card-title {
-        color: var(--citrine);
+        color: var(--custom-pink);
     }
-
   </style>
 </head>
 <body>
   <header class="header">
     <div class="container">
-      <div class="navbar"> <!-- 簡化了 header 結構 -->
+      <div class="navbar">
         <a href="./index.html" class="logo">
-          <img src="./assets/images/logo.svg" alt="網站 Logo"> <!-- 確認路徑 -->
+          <img src="./assets/images/logo.svg" alt="網站 Logo">
         </a>
         <div class="navbar-actions">
-          <div id="user-profile-display" class="user-profile" style="display: none;"> <!-- 用於 JS 控制顯示 -->
-            <img src="./assets/images/avatar.jpg" alt="用戶頭像" class="avatar" id="user-avatar"> <!-- 確認路徑 -->
-            <div id="user-menu-dropdown" class="user-dropdown"> <!-- 添加 ID -->
+          <div id="user-profile-display" class="user-profile" style="display: none;">
+            <img src="./assets/images/avatar.jpg" alt="用戶頭像" class="avatar" id="user-avatar">
+            <div id="user-menu-dropdown" class="user-dropdown">
               <button id="logoutBtn" class="logout-btn">登出</button>
             </div>
           </div>
@@ -217,13 +227,10 @@
         </div>
 
         <div class="main-content">
-          <section id="profile" class="profile-section active-section"> <!-- 初始顯示個人資料 -->
+          <section id="profile" class="profile-section active-section">
             <h2>個人資料</h2>
             <div class="profile-info">
-              <div class="info-item">
-                <label>用戶名:</label>
-                <span id="username-display">載入中...</span>
-              </div>
+              <!-- 移除了用戶名 -->
               <div class="info-item">
                 <label>電子郵件:</label>
                 <span id="email-display">載入中...</span>
@@ -238,7 +245,6 @@
           <section id="favorites" class="favorites-section">
             <h2>我的收藏</h2>
             <div class="movie-grid" id="favorites-grid">
-              <!-- 收藏的電影將在這裡動態顯示 -->
               <p>載入收藏中...</p>
             </div>
           </section>
@@ -259,19 +265,18 @@
         measurementId: "G-0CS1G6YJGD"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    const defaultAvatarSvgDataUri = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTYyOC43MzYgNTI4Ljg5NkE0MTYgNDE2IDAgMCAxIDkyOCA5MjhIOTZhNDE1Ljg3MiA0MTUuODcyIDAgMCAxIDI5OS4yNjQtMzk5LjEwNEw1MTIgNzA0bDExNi43MzYtMTc1LjEwNHpNNzIwIDMwNGEyMDggMjA4IDAgMSAxLTQxNiAwIDIwOCAyMDggMCAwIDEgNDE2IDB6Ii8+PC9zdmc+";
+    const defaultAvatarSvgDataUri = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTYyOC43MzYgNTI4Ljg5NkE0MTYgNDE2IDAgMCAxIDkyOCA5MjhIOTZhNDE1Ljg3MiA0MTUuODcyIDAgMCAxIDI5OS4yNjQtMzk5LjEwNEw1MTIgNzA0bDExNi43MzYtMTc1LjEwNHpNNzIwIDMwNGEyMDggMjA4IDAgMSAxLTQxNiAwIDIwOCAyMDggMCAwIDEgNDE2IDB6Ii8+PC9zdmc+";
 
     document.addEventListener('DOMContentLoaded', function() {
       const userProfileDisplay = document.getElementById('user-profile-display');
       const userAvatarElement = document.getElementById('user-avatar');
       const userMenuDropdown = document.getElementById('user-menu-dropdown');
 
-      const usernameDisplayElement = document.getElementById('username-display');
+      // 移除了 usernameDisplayElement
       const emailDisplayElement = document.getElementById('email-display');
       const registerDateDisplayElement = document.getElementById('register-date-display');
       const favoritesGrid = document.getElementById('favorites-grid');
@@ -309,17 +314,16 @@
         }
       });
 
-      // 導航切換
       function showSection(sectionId) {
-        profileSection.style.display = 'none';
-        favoritesSection.style.display = 'none';
-        navProfile.classList.remove('active');
-        navFavorites.classList.remove('active');
+        if(profileSection) profileSection.style.display = 'none';
+        if(favoritesSection) favoritesSection.style.display = 'none';
+        if(navProfile) navProfile.classList.remove('active');
+        if(navFavorites) navFavorites.classList.remove('active');
 
-        if (sectionId === 'profile') {
+        if (sectionId === 'profile' && profileSection && navProfile) {
           profileSection.style.display = 'block';
           navProfile.classList.add('active');
-        } else if (sectionId === 'favorites') {
+        } else if (sectionId === 'favorites' && favoritesSection && navFavorites) {
           favoritesSection.style.display = 'block';
           navFavorites.classList.add('active');
         }
@@ -337,13 +341,12 @@
           showSection('favorites');
         });
       }
-      // 初始顯示個人資料區塊
       showSection('profile');
 
 
       auth.onAuthStateChanged(async user => {
         if (user) {
-          if (userProfileDisplay) userProfileDisplay.style.display = 'flex'; // 顯示頭像區域
+          if (userProfileDisplay) userProfileDisplay.style.display = 'flex';
           console.log("user.html: 使用者已登入", user.uid);
 
           if (userAvatarElement) {
@@ -358,16 +361,19 @@
               const userData = doc.data();
               console.log("user.html: Firestore 使用者資料", userData);
 
-              if (usernameDisplayElement) {
-                usernameDisplayElement.textContent = userData.displayName || user.displayName || user.email.split('@')[0];
-              }
-              if (emailDisplayElement) {
+              // 顯示電子郵件 (直接從 Firebase Auth 的 user 物件獲取，更可靠)
+              if (emailDisplayElement && user.email) {
                 emailDisplayElement.textContent = user.email;
+              } else if (emailDisplayElement) {
+                emailDisplayElement.textContent = "無法獲取";
               }
+
+              // 顯示註冊時間 (從 Firestore 的 userData 獲取)
               if (registerDateDisplayElement && userData.createdAt && userData.createdAt.toDate) {
                 registerDateDisplayElement.textContent = userData.createdAt.toDate().toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric' });
               } else if (registerDateDisplayElement) {
                 registerDateDisplayElement.textContent = "無法獲取";
+                console.warn("Firestore 文件中缺少 'createdAt' 欄位，或其格式不正確。");
               }
 
               if (favoritesGrid && Array.isArray(userData.favorites)) {
@@ -378,14 +384,17 @@
 
             } else {
               console.warn("user.html: 在 Firestore 中找不到使用者文件:", user.uid);
-              if (usernameDisplayElement) usernameDisplayElement.textContent = user.email.split('@')[0];
-              if (emailDisplayElement) emailDisplayElement.textContent = user.email;
+              // 如果 Firestore 文件不存在，仍然嘗試顯示 Auth 中的 email
+              if (emailDisplayElement && user.email) {
+                emailDisplayElement.textContent = user.email;
+              } else if (emailDisplayElement) {
+                emailDisplayElement.textContent = "無法獲取";
+              }
               if (registerDateDisplayElement) registerDateDisplayElement.textContent = "未知";
-              if (favoritesGrid) favoritesGrid.innerHTML = '<p>無法載入使用者資訊。</p>';
+              if (favoritesGrid) favoritesGrid.innerHTML = '<p>無法載入使用者詳細資訊。</p>';
             }
           } catch (error) {
             console.error("user.html: 獲取 Firestore 使用者資訊失敗:", error);
-            if (usernameDisplayElement) usernameDisplayElement.textContent = "錯誤";
             if (emailDisplayElement) emailDisplayElement.textContent = "錯誤";
             if (registerDateDisplayElement) registerDateDisplayElement.textContent = "錯誤";
             if (favoritesGrid) favoritesGrid.innerHTML = '<p>載入收藏時發生錯誤。</p>';
@@ -414,7 +423,7 @@
 
         return `
           <div class="movie-card">
-            <a href="${movieUrl}" target="_blank"> <!-- 建議在新分頁開啟電影詳情 -->
+            <a href="${movieUrl}" target="_blank">
               <figure class="card-banner">
                 <img src="${imageUrl}" alt="${movieTitle} 電影海報">
               </figure>
@@ -423,44 +432,10 @@
               <a href="${movieUrl}" target="_blank">
                 <h3 class="card-title">${movieTitle}</h3>
               </a>
-              <!-- 可選: 加入 "從收藏移除" 按鈕 -->
-              <!-- <button class="remove-favorite-btn" data-movie-id="${movie.id}">移除收藏</button> -->
             </div>
           </div>
         `;
       }).join('');
-
-      // 如果您添加了 "從收藏移除" 按鈕，需要為它們綁定事件監聽器
-      // document.querySelectorAll('.remove-favorite-btn').forEach(button => {
-      //   button.addEventListener('click', async function() {
-      //     const movieIdToRemove = this.dataset.movieId;
-      //     const currentUser = auth.currentUser;
-      //     if (currentUser && movieIdToRemove) {
-      //       // 呼叫類似 toggleFavorite 的邏輯，但只執行移除
-      //       // ... 找到 movieToRemove 的完整物件，然後使用 arrayRemove ...
-      //       // 成功後重新調用 displayFavorites 或直接從 DOM 移除元素
-      //       console.log("嘗試移除電影:", movieIdToRemove);
-      //       // 這裡需要更完整的移除邏輯，參考 index.html 的 toggleFavorite
-      //       // 簡易範例: 重新載入收藏 (效率較低，但簡單)
-      //       const userDocRef = db.collection('users').doc(currentUser.uid);
-      //       const movieObject = favorites.find(fav => fav.id === movieIdToRemove);
-      //       if (movieObject) {
-      //         try {
-      //           await userDocRef.update({
-      //             favorites: firebase.firestore.FieldValue.arrayRemove(movieObject)
-      //           });
-      //           // 重新獲取並顯示收藏
-      //           const updatedDoc = await userDocRef.get();
-      //           if (updatedDoc.exists && updatedDoc.data() && Array.isArray(updatedDoc.data().favorites)) {
-      //             displayFavorites(updatedDoc.data().favorites);
-      //           }
-      //         } catch (err) {
-      //           console.error("從收藏移除失敗:", err);
-      //         }
-      //       }
-      //     }
-      //   });
-      // });
     }
   </script>
 </body>
