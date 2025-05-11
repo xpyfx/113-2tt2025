@@ -1,234 +1,113 @@
 <!DOCTYPE html>
-<html lang="zh-Hant"> <!-- 改為繁體中文 -->
+<html lang="zh-Hant">
 <!--#cursor version 1.0.0-->
 
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>電影告訴我的事</title>
 
-  <title>電影告訴我的事</title> <!-- 改為繁體中文 -->
-
-
-  <!-- Font Awesome icons (free version)-->
   <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
-  <!--Google icon-->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-
-  <!--
-    - favicon
-  -->
   <link rel="shortcut icon" href="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/LOGO.png?v=1718046694177" type="image/svg+xml">
-
-  <!--
-    - custom css link
-  -->
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="css/new.css" />
   <link rel="stylesheet" href="css/user.css" />
-
-  <!--
-    - google font link
-  -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Kaisei+Decol&family=Reggae+One&display=swap" rel="stylesheet">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <!-- AOS -->
   <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="https://csshake.surge.sh/csshake.min.css">
 
   <style>
-    /* Modal Styles (Adapted for Firebase) */
+    :root {
+      --radical-red: #FF3366; /* 確保這個變數有定義 */
+    }
     .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.5);
-      align-items: center; /* For vertical centering */
-      justify-content: center; /* For horizontal centering */
+      display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5); align-items: center; justify-content: center;
     }
-
     .modal-content {
-      background-color: var(--eerie-black-1); /* Dark theme for modal */
-      margin: auto; /* Centering */
-      padding: 25px;
-      border: 1px solid var(--jet);
-      width: 90%;
-      max-width: 450px;
-      border-radius: 12px;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      color: var(--white); /* Text color */
+      background-color: var(--eerie-black-1); margin: auto; padding: 25px; border: 1px solid var(--jet);
+      width: 90%; max-width: 450px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); color: var(--white);
     }
-
-    .modal-content h2 {
-      color: var(--citrine); /* Heading color */
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      color: var(--gray-x);
-      display: block;
-      margin-bottom: 8px;
-    }
-
+    .modal-content h2 { color: var(--citrine); text-align: center; margin-bottom: 20px; }
+    .form-group label { color: var(--gray-x); display: block; margin-bottom: 8px; }
     .form-group input {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid var(--jet);
-      border-radius: 6px;
-      background-color: var(--eerie-black-2);
-      color: var(--white);
-      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+      width: 100%; padding: 10px; border: 1px solid var(--jet); border-radius: 6px;
+      background-color: var(--eerie-black-2); color: var(--white); box-sizing: border-box;
     }
-    .form-group input:focus {
-      border-color: var(--citrine);
-      outline: none;
+    .form-group input:focus { border-color: var(--citrine); outline: none; }
+    .submit-btn {
+      background-color: var(--citrine); color: var(--eerie-black-1); border: none; padding: 12px 20px;
+      border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; font-weight: 600;
+      transition: background-color 0.3s; margin-top: 15px;
     }
-
-
-    .submit-btn { /* General submit button style for modals */
-      background-color: var(--citrine);
-      color: var(--eerie-black-1);
-      border: none;
-      padding: 12px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 16px;
-      font-weight: 600;
-      transition: background-color 0.3s;
-      margin-top: 15px;
-    }
-
-    .submit-btn:hover {
-      background-color: hsl(57, 97%, 50%); /* Lighter citrine */
-    }
-
-    /* Google Sign In Button Style */
+    .submit-btn:hover { background-color: hsl(57, 97%, 50%); }
     #google-signin-btn {
-        background-color: #4285F4; /* Google Blue */
-        color: white;
-        border: none;
-        padding: 12px 15px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        margin-top: 15px;
-        transition: background-color 0.3s;
+        background-color: #4285F4; color: white; border: none; padding: 12px 15px; border-radius: 6px;
+        cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
+        width: 100%; margin-top: 15px; transition: background-color 0.3s;
     }
-    #google-signin-btn:hover {
-        background-color: #357ae8;
-    }
-    #google-signin-btn .fab {
-        margin-right: 10px;
-    }
-
-
-    /* User Dropdown Styles */
+    #google-signin-btn:hover { background-color: #357ae8; }
+    #google-signin-btn .fab { margin-right: 10px; }
     .dropdown-menu {
-        display:none;
-        position:absolute;
-        background-color:var(--eerie-black-1); /* Dark theme */
-        border:1px solid var(--jet);
-        padding:10px;
-        border-radius:8px;
-        right: 0; /* Align to the right of the avatar */
-        top: calc(100% + 5px); /* Position below the avatar */
-        z-index:1001;
-        min-width: 150px; /* Minimum width */
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        display:none; position:absolute; background-color:var(--eerie-black-1); border:1px solid var(--jet);
+        padding:10px; border-radius:8px; right: 0; top: calc(100% + 5px); z-index:1001;
+        min-width: 150px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     .dropdown-menu a, .dropdown-menu button {
-        display:block;
-        color:var(--white);
-        padding:10px 15px;
-        text-decoration: none;
-        border-radius: 4px;
-        background: none;
-        border: none;
-        width: 100%;
-        text-align: left;
-        cursor: pointer;
+        display:block; color:var(--white); padding:10px 15px; text-decoration: none; border-radius: 4px;
+        background: none; border: none; width: 100%; text-align: left; cursor: pointer;
     }
     .dropdown-menu a:hover, .dropdown-menu button:hover {
-        background-color: var(--eerie-black-2); /* Slightly lighter hover */
-        color: var(--citrine) !important;
+        background-color: var(--eerie-black-2); color: var(--citrine) !important;
     }
-    #user-avatar-img {
-        cursor: pointer;
-    }
-    .navbar-actions {
-        position: relative; /* For dropdown positioning */
-    }
-
-    /* Favorite button on movie card */
+    #user-avatar-img { cursor: pointer; }
+    .navbar-actions { position: relative; }
     .favorite-btn {
-        background: none;
-        border: none;
-        cursor: pointer;
-        padding: 0.5rem;
-        color: var(--light-gray); /* Default color for heart outline */
-        margin-left: 8px; /* Spacing */
-        line-height: 1;
+        background: none; border: none; cursor: pointer; padding: 0.5rem;
+        color: var(--light-gray); margin-left: 8px; line-height: 1;
     }
     .favorite-btn i, .favorite-btn ion-icon {
-        font-size: 1.5rem; /* Consistent icon size */
-        vertical-align: middle;
+        font-size: 1.5rem; vertical-align: middle;
         transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
-    .favorite-btn.active i, .favorite-btn.active ion-icon {
-        color: var(--radical-red); /* Color for filled heart */
-        transform: scale(1.1); /* Slight scale effect when active */
+    .favorite-btn.active i,
+    .favorite-btn.active ion-icon {
+        color: var(--radical-red) !important; /* 強制！ */
+        transform: scale(1.1) !important; /* 強制！ */
     }
-    .favorite-btn:hover i, .favorite-btn:hover ion-icon {
-        color: var(--radical-red); /* Hover color */
+    .favorite-btn:hover i,
+    .favorite-btn:hover ion-icon {
+        color: var(--radical-red);
     }
-
   </style>
 </head>
 
 <body id="top">
 
-  <!--
-    - #HEADER
-  -->
-
   <header class="header" data-header>
     <div class="container">
-
       <div class="overlay" data-overlay></div>
-
       <a href="./index.html" class="logo">
-        <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/webLogo.png?v=1718033533264" alt="網站Logo" class="logo"> <!-- Alt text updated -->
+        <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/webLogo.png?v=1718033533264" alt="網站Logo" class="logo">
       </a>
-
       <button class="menu-open-btn" data-menu-open-btn>
         <ion-icon name="reorder-two"></ion-icon>
       </button>
-
       <nav class="navbar" data-navbar>
-
         <div class="navbar-top">
           <a href="./index.html" class="logo">
-            <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/webLogo.png?v=1718033533264" alt="網站Logo" class="logo"> <!-- Alt text updated -->
+            <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/webLogo.png?v=1718033533264" alt="網站Logo" class="logo">
           </a>
           <button class="menu-close-btn" data-menu-close-btn>
             <ion-icon name="close-outline"></ion-icon>
           </button>
         </div>
-
         <ul class="navbar-list mainfont" data-aos="fade-left">
-          <!-- Navbar items remain the same -->
           <div class="shake-slow"><li><a href="./index.html" class="navbar-link">主頁</a></li></div>
           <div class="shake-slow"><li><a href="./romantic.html" class="navbar-link">愛情</a></li></div>
           <div class="shake-slow"><li><a href="./heart-warming.html" class="navbar-link">親情</a></li></div>
@@ -242,7 +121,6 @@
           <div class="shake-slow"><li><a href="./index.html#all" class="navbar-link">觀看全部</a></li></div>
         </ul>
       </nav>
-
       <div class="navbar-actions">
         <div id="auth-buttons">
           <button class="btn btn-primary" onclick="showLoginModal()">登入</button>
@@ -256,11 +134,9 @@
           </div>
         </div>
       </div>
-
     </div>
   </header>
 
-  <!-- Firebase Login Modal -->
   <div id="login-modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModals()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">×</span>
@@ -285,7 +161,6 @@
     </div>
   </div>
 
-  <!-- Firebase Register Modal -->
   <div id="register-modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModals()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">×</span>
@@ -307,55 +182,36 @@
     </div>
   </div>
 
-
   <main>
     <article>
-
-      <!--
-        - #HERO
-      -->
       <section class="hero ">
         <div class="wraper">
           <div class="container">
             <div class="hero-content" data-aos="fade-up">
               <p class="hero-subtitle white">Top Gun: Maverick</p>
-              <h1 class="h1 hero-title white">
-                捍衛戰士：獨行俠
-              </h1>
+              <h1 class="h1 hero-title white">捍衛戰士：獨行俠</h1>
               <div class="meta-wrapper">
                 <div class="badge-wrapper">
                   <div class="badge badge-fill">美國</div>
                   <div class="badge badge-outline">HD</div>
                 </div>
-                <div class="ganre-wrapper">
-                  <a href="#action">動作</a>
-                </div>
+                <div class="ganre-wrapper"><a href="#action">動作</a></div>
                 <div class="date-time">
-                  <div>
-                    <ion-icon name="calendar-outline"></ion-icon>
-                    <time datetime="2023">2023</time> <!-- Hero movie year incorrect, but keeping as is -->
-                  </div>
-                  <div>
-                    <ion-icon name="time-outline"></ion-icon>
-                    <time datetime="PT128M">130 分鐘</time>
-                  </div>
+                  <div><ion-icon name="calendar-outline"></ion-icon><time datetime="2023">2023</time></div>
+                  <div><ion-icon name="time-outline"></ion-icon><time datetime="PT128M">130 分鐘</time></div>
                 </div>
               </div>
               <button class="btn btn-primary">
                 <ion-icon name="play"></ion-icon>
-                <a class="white mainfont" href="./movie-details-36.html">
-                  <span>告訴我的事</span>
-                </a>
+                <a class="white mainfont" href="./movie-details-36.html"><span>告訴我的事</span></a>
               </button>
             </div>
           </div>
         </div>
       </section>
 
-
-      <!--
-        - #SUSPENSE
-      -->
+      <!-- Movie sections (Suspense, Drama, Encouragement, All) remain structurally the same -->
+      <!-- Example for one movie card, others should follow this structure -->
       <section class="upcoming" id="suspense" data-aos="fade-up">
         <div class="container">
           <div class="flex-wrapper">
@@ -375,32 +231,27 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-16.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/diva20231009artmovie001.jpg?v=1717853165685" alt="消失的她電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/diva20231009artmovie001.jpg?v=1717853165685" alt="消失的她電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-16.html"><h3 class="card-title">消失的她</h3></a>
-                  <time datetime="2023">2023</time>
+                  <a href="./movie-details-16.html"><h3 class="card-title">消失的她</h3></a><time datetime="2023">2023</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
                   <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT121M">121 分鐘</time></div>
                   <div class="rating"><ion-icon name="star"></ion-icon><data>6.5</data></div>
-                  <!-- Favorite button will be added by JS -->
+                  <!-- Favorite button will be dynamically added here by JS -->
                 </div>
               </div>
             </li>
+            <!-- Other movies in Suspense section -->
             <li>
               <div class="movie-card">
                 <a href="./movie-details-17.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%80%83%E5%87%BA%E5%A4%A2%E5%B9%BB%E5%B3%B6.jpg?v=1717849715565" alt="逃出夢幻島電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%80%83%E5%87%BA%E5%A4%A2%E5%B9%BB%E5%B3%B6.jpg?v=1717849715565" alt="逃出夢幻島電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-17.html"><h3 class="card-title">逃出夢幻島</h3></a>
-                  <time datetime="2020">2020</time>
+                  <a href="./movie-details-17.html"><h3 class="card-title">逃出夢幻島</h3></a><time datetime="2020">2020</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -412,13 +263,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-18.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/95baff7aab9411ac66173e58b9fd930e.jpg?v=1717853254505" alt="看見魔鬼電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/95baff7aab9411ac66173e58b9fd930e.jpg?v=1717853254505" alt="看見魔鬼電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-18.html"><h3 class="card-title">看見魔鬼</h3></a>
-                  <time datetime="2010">2010</time>
+                  <a href="./movie-details-18.html"><h3 class="card-title">看見魔鬼</h3></a><time datetime="2010">2010</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -430,13 +278,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-19.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E6%AE%BA%E4%BA%BA%E5%9B%9E%E6%86%B6.jpg?v=1717849714695" alt="殺人回憶電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E6%AE%BA%E4%BA%BA%E5%9B%9E%E6%86%B6.jpg?v=1717849714695" alt="殺人回憶電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-19.html"><h3 class="card-title">殺人回憶</h3></a>
-                  <time datetime="2003">2003</time>
+                  <a href="./movie-details-19.html"><h3 class="card-title">殺人回憶</h3></a><time datetime="2003">2003</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -449,9 +294,6 @@
         </div>
       </section>
 
-      <!--
-        - #DRAMA
-      -->
       <section class="upcoming" id="drama" data-aos="fade-up">
         <div class="container">
           <div class="flex-wrapper">
@@ -471,13 +313,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-09.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%BE%A9%E4%BB%87%E5%A5%BD%E9%96%A8%E8%9C%9C2.png?v=1717924305293" alt="復仇好閨蜜電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%BE%A9%E4%BB%87%E5%A5%BD%E9%96%A8%E8%9C%9C2.png?v=1717924305293" alt="復仇好閨蜜電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-09.html"><h3 class="card-title">復仇好閨蜜</h3></a>
-                  <time datetime="2022">2022</time>
+                  <a href="./movie-details-09.html"><h3 class="card-title">復仇好閨蜜</h3></a><time datetime="2022">2022</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -489,17 +328,14 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-10.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1505670025-2867885686_n.jpg?v=1717852224935" alt="我只是一個計程車司機電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1505670025-2867885686_n.jpg?v=1717852224935" alt="我只是一個計程車司機電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-10.html"><h3 class="card-title">我只是一個計程車司機</h3></a>
-                  <time datetime="2017">2017</time>
+                  <a href="./movie-details-10.html"><h3 class="card-title">我只是一個計程車司機</h3></a><time datetime="2017">2017</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
-                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT110M">110 分鐘</time></div> <!-- Corrected time -->
+                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT110M">110 分鐘</time></div>
                   <div class="rating"><ion-icon name="star"></ion-icon><data>7.9</data></div>
                 </div>
               </div>
@@ -507,13 +343,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-11.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/Poor_Things_Poster.jpg?v=1717852384430" alt="可憐的東西電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/Poor_Things_Poster.jpg?v=1717852384430" alt="可憐的東西電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-11.html"><h3 class="card-title">可憐的東西</h3></a>
-                  <time datetime="2023">2023</time>
+                  <a href="./movie-details-11.html"><h3 class="card-title">可憐的東西</h3></a><time datetime="2023">2023</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -525,50 +358,40 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-12.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%BF%A0%E7%8A%AC%E5%B0%8F%E5%B7%B4.jpg?v=1717923887818" alt="忠犬小八電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%BF%A0%E7%8A%AC%E5%B0%8F%E5%B7%B4.jpg?v=1717923887818" alt="忠犬小八電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-12.html"><h3 class="card-title">忠犬小八</h3></a>
-                  <time datetime="2009">2009</time>
+                  <a href="./movie-details-12.html"><h3 class="card-title">忠犬小八</h3></a><time datetime="2009">2009</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
-                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT93M">93 分鐘</time></div> <!-- Actual runtime for Hachi: A Dog's Tale -->
-                  <div class="rating"><ion-icon name="star"></ion-icon><data>8.1</data></div> <!-- Rating for Hachi -->
+                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT93M">93 分鐘</time></div>
+                  <div class="rating"><ion-icon name="star"></ion-icon><data>8.1</data></div>
                 </div>
               </div>
             </li>
             <li>
               <div class="movie-card">
                 <a href="./movie-details-13.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%AF%84%E7%94%9F%E4%B8%8A%E6%B5%81.jpeg.webp?v=1717852720019" alt="寄生上流電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%AF%84%E7%94%9F%E4%B8%8A%E6%B5%81.jpeg.webp?v=1717852720019" alt="寄生上流電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-13.html"><h3 class="card-title">寄生上流</h3></a>
-                  <time datetime="2019">2019</time>
+                  <a href="./movie-details-13.html"><h3 class="card-title">寄生上流</h3></a><time datetime="2019">2019</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
                   <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT132M">132 分鐘</time></div>
                   <div class="rating"><ion-icon name="star"></ion-icon><data>8.5</data></div>
-                  <!-- Favorite button removed, will be added by JS -->
                 </div>
               </div>
             </li>
             <li>
               <div class="movie-card">
                 <a href="./movie-details-14.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%8B%BC%E9%90%B5%E8%8B%B1%E9%9B%84.jpg?v=1717849711055" alt="鋼鐵英雄電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%8B%BC%E9%90%B5%E8%8B%B1%E9%9B%84.jpg?v=1717849711055" alt="鋼鐵英雄電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-14.html"><h3 class="card-title">鋼鐵英雄</h3></a>
-                  <time datetime="2016">2016</time>
+                  <a href="./movie-details-14.html"><h3 class="card-title">鋼鐵英雄</h3></a><time datetime="2016">2016</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -581,9 +404,6 @@
         </div>
       </section>
 
-      <!--
-        - #ENCOURAGEMENT
-      -->
       <section class="upcoming" id="encouragement" data-aos="fade-up">
         <div class="container">
           <div class="flex-wrapper">
@@ -603,13 +423,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-20.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/getHamiVideoImg.php.jpeg?v=1717853362815" alt="當幸福來敲門電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/getHamiVideoImg.php.jpeg?v=1717853362815" alt="當幸福來敲門電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-20.html"><h3 class="card-title">當幸福來敲門</h3></a>
-                  <time datetime="2006">2006</time>
+                  <a href="./movie-details-20.html"><h3 class="card-title">當幸福來敲門</h3></a><time datetime="2006">2006</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -621,13 +438,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-21.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E7%A9%BF%E8%91%97PRADA%E7%9A%84%E6%83%A1%E9%AD%94.jpg?v=1717849707818" alt="穿著Prada的惡魔電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E7%A9%BF%E8%91%97PRADA%E7%9A%84%E6%83%A1%E9%AD%94.jpg?v=1717849707818" alt="穿著Prada的惡魔電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-21.html"><h3 class="card-title">穿著Prada的惡魔</h3></a>
-                  <time datetime="2006">2006</time>
+                  <a href="./movie-details-21.html"><h3 class="card-title">穿著Prada的惡魔</h3></a><time datetime="2006">2006</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -639,13 +453,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-22.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%BF%83%E9%9D%88%E6%8D%95%E6%89%8B.jpg?v=1717849716441" alt="心靈捕手電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%BF%83%E9%9D%88%E6%8D%95%E6%89%8B.jpg?v=1717849716441" alt="心靈捕手電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-22.html"><h3 class="card-title">心靈捕手</h3></a>
-                  <time datetime="1997">1997</time>
+                  <a href="./movie-details-22.html"><h3 class="card-title">心靈捕手</h3></a><time datetime="1997">1997</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -657,31 +468,25 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-23.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/aescaeyacaesczaeicaeeaacsaaeeaaaeaeez-2.jpeg?v=1717853517803" alt="白日夢冒險王電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/aescaeyacaesczaeicaeeaacsaaeeaaaeaeez-2.jpeg?v=1717853517803" alt="白日夢冒險王電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-23.html"><h3 class="card-title">白日夢冒險王</h3></a>
-                  <time datetime="2013">2013</time>
+                  <a href="./movie-details-23.html"><h3 class="card-title">白日夢冒險王</h3></a><time datetime="2013">2013</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
                   <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT114M">114 分鐘</time></div>
-                  <div class="rating"><ion-icon name="star"></ion-icon><data>7.3</data></div> <!-- Corrected IMDB rating -->
+                  <div class="rating"><ion-icon name="star"></ion-icon><data>7.3</data></div>
                 </div>
               </div>
             </li>
            <li>
               <div class="movie-card">
                 <a href="./movie-details-24.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E6%94%BB%E5%85%B6%E4%B8%8D%E5%82%99.jpg?v=1717923382708" alt="攻其不備電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E6%94%BB%E5%85%B6%E4%B8%8D%E5%82%99.jpg?v=1717923382708" alt="攻其不備電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-24.html"><h3 class="card-title">攻其不備</h3></a>
-                  <time datetime="2009">2009</time>
+                  <a href="./movie-details-24.html"><h3 class="card-title">攻其不備</h3></a><time datetime="2009">2009</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -693,13 +498,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-25.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1-1-64d1b93297a5d.jpg?v=1717853776617" alt="夢想代表隊電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1-1-64d1b93297a5d.jpg?v=1717853776617" alt="夢想代表隊電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-25.html"><h3 class="card-title">夢想代表隊</h3></a>
-                  <time datetime="2023">2023</time>
+                  <a href="./movie-details-25.html"><h3 class="card-title">夢想代表隊</h3></a><time datetime="2023">2023</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -711,13 +513,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-26.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%80%86%E8%BD%89%E4%BA%BA%E7%94%9F.jpeg?v=1717849713791" alt="逆轉人生電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%80%86%E8%BD%89%E4%BA%BA%E7%94%9F.jpeg?v=1717849713791" alt="逆轉人生電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-26.html"><h3 class="card-title">逆轉人生</h3></a>
-                  <time datetime="2011">2011</time>
+                  <a href="./movie-details-26.html"><h3 class="card-title">逆轉人生</h3></a><time datetime="2011">2011</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -729,13 +528,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-27.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/09a169cacd6597dbfd85d3a0f3d165bf.jpeg?v=1717853855085" alt="奇蹟男孩電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/09a169cacd6597dbfd85d3a0f3d165bf.jpeg?v=1717853855085" alt="奇蹟男孩電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-27.html"><h3 class="card-title">奇蹟男孩</h3></a>
-                  <time datetime="2017">2017</time>
+                  <a href="./movie-details-27.html"><h3 class="card-title">奇蹟男孩</h3></a><time datetime="2017">2017</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -747,31 +543,25 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-28.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E8%B5%A4%E5%AD%90%E6%9C%AC%E8%89%B2.jpg?v=1717849706804" alt="赤子本色電影海報"> <!-- Rudy -->
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E8%B5%A4%E5%AD%90%E6%9C%AC%E8%89%B2.jpg?v=1717849706804" alt="赤子本色電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-28.html"><h3 class="card-title">赤子本色</h3></a>
-                  <time datetime="1993">1993</time> <!-- Correct year for Rudy -->
+                  <a href="./movie-details-28.html"><h3 class="card-title">赤子本色</h3></a><time datetime="1993">1993</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
-                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT114M">114 分鐘</time></div> <!-- Correct runtime for Rudy -->
-                  <div class="rating"><ion-icon name="star"></ion-icon><data>7.5</data></div> <!-- Correct rating for Rudy -->
+                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT114M">114 分鐘</time></div>
+                  <div class="rating"><ion-icon name="star"></ion-icon><data>7.5</data></div>
                 </div>
               </div>
             </li>
             <li>
               <div class="movie-card">
                 <a href="./movie-details-29.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1b5403330ae2278e88e24ca15142ea2d.JPG?v=1717853938475" alt="墊底辣妹電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1b5403330ae2278e88e24ca15142ea2d.JPG?v=1717853938475" alt="墊底辣妹電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-29.html"><h3 class="card-title">墊底辣妹</h3></a>
-                  <time datetime="2015">2015</time>
+                  <a href="./movie-details-29.html"><h3 class="card-title">墊底辣妹</h3></a><time datetime="2015">2015</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -784,9 +574,6 @@
         </div>
       </section>
 
-      <!--
-        - #ALL
-      -->
       <section class="upcoming" id="all" data-aos="fade-up">
         <div class="container">
           <div class="flex-wrapper">
@@ -803,18 +590,13 @@
             </ul>
           </div>
           <ul class="movies-list has-scrollbar">
-            <!-- Movie cards for 'ALL' section -->
-            <!-- Example: -->
             <li>
               <div class="movie-card">
                 <a href="./movie-details-02.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E4%BD%A0%E7%9A%84%E5%A9%9A%E7%A6%AE.jpg?v=1717849712958" alt="你的婚禮電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E4%BD%A0%E7%9A%84%E5%A9%9A%E7%A6%AE.jpg?v=1717849712958" alt="你的婚禮電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-02.html"><h3 class="card-title">你的婚禮</h3></a>
-                  <time datetime="2021">2021</time>
+                  <a href="./movie-details-02.html"><h3 class="card-title">你的婚禮</h3></a><time datetime="2021">2021</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -826,17 +608,14 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-03.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%80%81%E4%BD%A0%E4%B8%80%E6%9C%B5%E5%B0%8F%E7%B4%85%E8%8A%B1.jpeg?v=1717850906747" alt="送你一朵小紅花電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%80%81%E4%BD%A0%E4%B8%80%E6%9C%B5%E5%B0%8F%E7%B4%85%E8%8A%B1.jpeg?v=1717850906747" alt="送你一朵小紅花電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-03.html"><h3 class="card-title">送你一朵小紅花</h3></a>
-                  <time datetime="2020">2020</time>
+                  <a href="./movie-details-03.html"><h3 class="card-title">送你一朵小紅花</h3></a><time datetime="2020">2020</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
-                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT128M">128 分鐘</time></div> <!-- Corrected runtime -->
+                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT128M">128 分鐘</time></div>
                   <div class="rating"><ion-icon name="star"></ion-icon><data>6.7</data></div>
                 </div>
               </div>
@@ -844,13 +623,10 @@
              <li>
               <div class="movie-card">
                 <a href="./movie-details-04.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%A3%81%E8%8A%B1%E7%94%B7%E5%AD%A9.jpg?v=1717849705996" alt="壁花男孩電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E5%A3%81%E8%8A%B1%E7%94%B7%E5%AD%A9.jpg?v=1717849705996" alt="壁花男孩電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-04.html"><h3 class="card-title">壁花男孩</h3></a>
-                  <time datetime="2012">2012</time>
+                  <a href="./movie-details-04.html"><h3 class="card-title">壁花男孩</h3></a><time datetime="2012">2012</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -862,31 +638,25 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-05.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E4%BD%90%E8%B3%80%E7%9A%84%E8%B6%85%E7%B4%9A%E9%98%BF%E5%AC%A4.jpg?v=1717851196959" alt="佐賀的超級阿嬤電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E4%BD%90%E8%B3%80%E7%9A%84%E8%B6%85%E7%B4%9A%E9%98%BF%E5%AC%A4.jpg?v=1717851196959" alt="佐賀的超級阿嬤電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-05.html"><h3 class="card-title">佐賀的超級阿嬤</h3></a>
-                  <time datetime="2006">2006</time> <!-- Correct year -->
+                  <a href="./movie-details-05.html"><h3 class="card-title">佐賀的超級阿嬤</h3></a><time datetime="2006">2006</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
-                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT104M">104 分鐘</time></div> <!-- Correct runtime -->
-                  <div class="rating"><ion-icon name="star"></ion-icon><data>7.4</data></div> <!-- Rating if available -->
+                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT104M">104 分鐘</time></div>
+                  <div class="rating"><ion-icon name="star"></ion-icon><data>7.4</data></div>
                 </div>
               </div>
             </li>
             <li>
               <div class="movie-card">
                 <a href="./movie-details-06.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1496034401-774394530_wn.jpg?v=1717851555932" alt="我和我的冠軍女兒電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1496034401-774394530_wn.jpg?v=1717851555932" alt="我和我的冠軍女兒電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-06.html"><h3 class="card-title">我和我的冠軍女兒</h3></a>
-                  <time datetime="2016">2016</time> <!-- Correct year -->
+                  <a href="./movie-details-06.html"><h3 class="card-title">我和我的冠軍女兒</h3></a><time datetime="2016">2016</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -898,13 +668,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-07.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1408944958-1628935141_m.jpg?v=1717851710962" alt="露西電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1408944958-1628935141_m.jpg?v=1717851710962" alt="露西電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-07.html"><h3 class="card-title">露西</h3></a>
-                  <time datetime="2014">2014</time>
+                  <a href="./movie-details-07.html"><h3 class="card-title">露西</h3></a><time datetime="2014">2014</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -916,13 +683,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-08.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/p16059_p_v8_ab.jpg?v=1717851984223" alt="終極追殺令電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/p16059_p_v8_ab.jpg?v=1717851984223" alt="終極追殺令電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-08.html"><h3 class="card-title">終極追殺令</h3></a>
-                  <time datetime="1994">1994</time> <!-- Correct year -->
+                  <a href="./movie-details-08.html"><h3 class="card-title">終極追殺令</h3></a><time datetime="1994">1994</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -931,35 +695,28 @@
                 </div>
               </div>
             </li>
-            <!-- ... other movies from "All" section, formatted similarly ... -->
              <li>
               <div class="movie-card">
                 <a href="./movie-details-15.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/avatar.jpg?v=1717922765655" alt="阿凡達電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/avatar.jpg?v=1717922765655" alt="阿凡達電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-15.html"><h3 class="card-title">阿凡達</h3></a>
-                  <time datetime="2009">2009</time>
+                  <a href="./movie-details-15.html"><h3 class="card-title">阿凡達</h3></a><time datetime="2009">2009</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
                   <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT162M">162 分鐘</time></div>
-                  <div class="rating"><ion-icon name="star"></ion-icon><data>7.9</data></div> <!-- Corrected IMDB rating -->
+                  <div class="rating"><ion-icon name="star"></ion-icon><data>7.9</data></div>
                 </div>
               </div>
             </li>
             <li>
               <div class="movie-card">
                 <a href="./movie-details-30.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/moana.jpeg?v=1717923058410" alt="海洋奇緣電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/moana.jpeg?v=1717923058410" alt="海洋奇緣電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-30.html"><h3 class="card-title">海洋奇緣</h3></a>
-                  <time datetime="2016">2016</time>
+                  <a href="./movie-details-30.html"><h3 class="card-title">海洋奇緣</h3></a><time datetime="2016">2016</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -971,13 +728,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-31.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%253F%253F%253F%253F%253F.webp?v=1717854082277" alt="可可夜總會電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%253F%253F%253F%253F%253F.webp?v=1717854082277" alt="可可夜總會電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-31.html"><h3 class="card-title">可可夜總會</h3></a>
-                  <time datetime="2017">2017</time>
+                  <a href="./movie-details-31.html"><h3 class="card-title">可可夜總會</h3></a><time datetime="2017">2017</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
@@ -989,13 +743,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-32.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/362a7139ce4a3750aaa26165e91mc865.JPG?v=1717924132405" alt="蜘蛛人：穿越新宇宙電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/362a7139ce4a3750aaa26165e91mc865.JPG?v=1717924132405" alt="蜘蛛人：穿越新宇宙電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-32.html"><h3 class="card-title">蜘蛛人：穿越新宇宙</h3></a>
-                  <time datetime="2023">2023</time> <!-- Corrected year for Across the Spider-Verse -->
+                  <a href="./movie-details-32.html"><h3 class="card-title">蜘蛛人：穿越新宇宙</h3></a><time datetime="2023">2023</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">4K</div>
@@ -1007,17 +758,14 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-33.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1280.jpeg?v=1717854247243" alt="元素方城市電影海報"> <!-- Corrected name -->
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/1280.jpeg?v=1717854247243" alt="元素方城市電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-33.html"><h3 class="card-title">元素方城市</h3></a>
-                  <time datetime="2023">2023</time>
+                  <a href="./movie-details-33.html"><h3 class="card-title">元素方城市</h3></a><time datetime="2023">2023</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">2K</div>
-                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT101M">101 分鐘</time></div> <!-- Corrected runtime -->
+                  <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT101M">101 分鐘</time></div>
                   <div class="rating"><ion-icon name="star"></ion-icon><data>7.0</data></div>
                 </div>
               </div>
@@ -1025,13 +773,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-34.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%253F%253F%253F%253F%253F-3.webp?v=1717854400121" alt="九品芝麻官電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%253F%253F%253F%253F%253F-3.webp?v=1717854400121" alt="九品芝麻官電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-34.html"><h3 class="card-title">九品芝麻官</h3></a>
-                  <time datetime="1994">1994</time>
+                  <a href="./movie-details-34.html"><h3 class="card-title">九品芝麻官</h3></a><time datetime="1994">1994</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">2K</div>
@@ -1043,13 +788,10 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-35.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%97%9C%E6%96%BC%E6%88%91%E5%92%8C%E9%AC%BC%E8%AE%8A%E6%88%90%E5%AE%B6%E4%BA%BA%E7%9A%84%E9%82%A3%E4%BB%B6%E4%BA%8B.jpeg?v=1717852585545" alt="關於我和鬼變成家人的那件事電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E9%97%9C%E6%96%BC%E6%88%91%E5%92%8C%E9%AC%BC%E8%AE%8A%E6%88%90%E5%AE%B6%E4%BA%BA%E7%9A%84%E9%82%A3%E4%BB%B6%E4%BA%8B.jpeg?v=1717852585545" alt="關於我和鬼變成家人的那件事電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-35.html"><h3 class="card-title">關於我和鬼變成家人的那件事</h3></a>
-                  <time datetime="2023">2023</time>
+                  <a href="./movie-details-35.html"><h3 class="card-title">關於我和鬼變成家人的那件事</h3></a><time datetime="2023">2023</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">2K</div>
@@ -1061,46 +803,34 @@
             <li>
               <div class="movie-card">
                 <a href="./movie-details-36.html">
-                  <figure class="card-banner">
-                    <img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E6%8D%8D%E8%A1%9B%E6%88%B0%E5%A3%AB.jpg?v=1717926951060" alt="捍衛戰士：獨行俠電影海報">
-                  </figure>
+                  <figure class="card-banner"><img src="https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/%E6%8D%8D%E8%A1%9B%E6%88%B0%E5%A3%AB.jpg?v=1717926951060" alt="捍衛戰士：獨行俠電影海報"></figure>
                 </a>
                 <div class="title-wrapper">
-                  <a href="./movie-details-36.html"><h3 class="card-title">捍衛戰士：獨行俠</h3></a>
-                  <time datetime="2022">2022</time>
+                  <a href="./movie-details-36.html"><h3 class="card-title">捍衛戰士：獨行俠</h3></a><time datetime="2022">2022</time>
                 </div>
                 <div class="card-meta">
                   <div class="badge badge-outline">HD</div>
                   <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT130M">130 分鐘</time></div>
-                  <div class="rating"><ion-icon name="star"></ion-icon><data>8.3</data></div> <!-- Corrected IMDB Rating -->
+                  <div class="rating"><ion-icon name="star"></ion-icon><data>8.3</data></div>
                 </div>
               </div>
             </li>
-            <!-- Ensure ALL movie items from the original HTML are included here in the same format -->
-            <!-- ... and the rest of the "All" movies ... -->
           </ul>
         </div>
       </section>
-
     </article>
   </main>
 
-
-  <!--
-    - #FOOTER
-  -->
   <footer class="footer">
     <div class="footer-top">
       <div class="container">
         <div class="footer-brand-wrapper">
-          <a href="./index.html" class="logo">
-            <img src="./assets/images/logo.svg" alt="網站Logo"> <!-- Updated alt text -->
-          </a>
+          <a href="./index.html" class="logo"><img src="./assets/images/logo.svg" alt="網站Logo"></a>
           <ul class="footer-list">
             <li><a href="./index.html" class="footer-link">首頁</a></li>
             <li><a href="#suspense" class="footer-link">懸疑</a></li>
             <li><a href="#drama" class="footer-link">劇情</a></li>
-            <li><a href="#encouragement" class="footer-link">勵志</a></li> <!-- Corrected ID -->
+            <li><a href="#encouragement" class="footer-link">勵志</a></li>
             <li><a href="#all" class="footer-link">觀看全部</a></li>
           </ul>
         </div>
@@ -1109,152 +839,100 @@
     </div>
     <div class="footer-bottom">
       <div class="container">
-        <p class="copyright">
-          © 2024 電影告訴我的事. 版權所有. - By ANASTASIA - <!-- Updated text -->
-        </p>
+        <p class="copyright">© 2024 電影告訴我的事. 版權所有. - By ANASTASIA -</p>
       </div>
     </div>
   </footer>
 
+  <a href="#top" class="go-top" data-go-top><ion-icon name="chevron-up"></ion-icon></a>
 
-  <!--
-    - #GO TO TOP
-  -->
-  <a href="#top" class="go-top" data-go-top>
-    <ion-icon name="chevron-up"></ion-icon>
-  </a>
-
-
-  <!--
-    - Firebase SDKs (Order is important for compat versions)
-  -->
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
-
-  <!--
-    - custom js link
-  -->
   <script src="./assets/js/script.js"></script>
-  <!-- AOS JS -->
   <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-  <script>
-    AOS.init({
-        duration: 800, // 動畫持續時間
-        once: true // 動畫只播放一次
-    });
-  </script>
-
-  <!--
-    - ionicon link
-  -->
+  <script> AOS.init({ duration: 800, once: true }); </script>
   <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
-
   <script>
-    // Firebase Configuration - REPLACE WITH YOUR ACTUAL CONFIG
+    // Firebase Configuration
     const firebaseConfig = {
-    apiKey: "AIzaSyA2w4v4NGa1xbiGWCCFBgPEVipsHQ1ELHU",
-    authDomain: "wmtm-f8685.firebaseapp.com",
-    projectId: "wmtm-f8685",
-    storageBucket: "wmtm-f8685.firebasestorage.app",
-    messagingSenderId: "576339094208",
-    appId: "1:576339094208:web:2725b0d1d34fd0d72c9b25",
-    measurementId: "G-0CS1G6YJGD"
+        apiKey: "AIzaSyA2w4v4NGa1xbiGWCCFBgPEVipsHQ1ELHU",
+        authDomain: "wmtm-f8685.firebaseapp.com",
+        projectId: "wmtm-f8685",
+        storageBucket: "wmtm-f8685.appspot.com",
+        messagingSenderId: "576339094208",
+        appId: "1:576339094208:web:2725b0d1d34fd0d72c9b25",
+        measurementId: "G-0CS1G6YJGD"
     };
 
-    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
     const googleProvider = new firebase.auth.GoogleAuthProvider();
 
-    // DOM Elements
     const loginModal = document.getElementById('login-modal');
     const registerModal = document.getElementById('register-modal');
     const loginForm = document.getElementById('login-form');
     const registerForm = document.getElementById('register-form');
     const googleSignInBtn = document.getElementById('google-signin-btn');
     const logoutBtn = document.getElementById('logout-btn');
-
     const authButtonsDiv = document.getElementById('auth-buttons');
     const userProfileDiv = document.getElementById('user-profile');
     const userAvatarImg = document.getElementById('user-avatar-img');
     const userDropdown = document.getElementById('user-dropdown');
 
-    // --- Modal Handling ---
     function showLoginModal() {
-      if (loginModal) loginModal.style.display = 'flex'; // Use flex for centering
+      if (loginModal) loginModal.style.display = 'flex';
       if (registerModal) registerModal.style.display = 'none';
     }
-
     function showRegisterModal() {
-      if (registerModal) registerModal.style.display = 'flex'; // Use flex for centering
+      if (registerModal) registerModal.style.display = 'flex';
       if (loginModal) loginModal.style.display = 'none';
     }
-
     function closeModals() {
       if (loginModal) loginModal.style.display = 'none';
       if (registerModal) registerModal.style.display = 'none';
     }
 
     window.onclick = function(event) {
-      if (event.target == loginModal && loginModal) {
-        loginModal.style.display = "none";
-      }
-      if (event.target == registerModal && registerModal) {
-        registerModal.style.display = "none";
-      }
+      if (event.target == loginModal && loginModal) loginModal.style.display = "none";
+      if (event.target == registerModal && registerModal) registerModal.style.display = "none";
       if (userProfileDiv && userProfileDiv.style.display === 'block' && !userProfileDiv.contains(event.target) && userDropdown && !userDropdown.contains(event.target) && event.target !== userAvatarImg) {
           userDropdown.style.display = 'none';
       }
     }
-
     function toggleUserDropdown() {
-        if (userDropdown) {
-            userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
-        }
+        if (userDropdown) userDropdown.style.display = userDropdown.style.display === 'none' ? 'block' : 'none';
     }
 
-    // --- Authentication State Observer ---
     auth.onAuthStateChanged(async user => {
       if (user) {
-        console.log("使用者已登入:", user);
+        console.log("使用者已登入 (onAuthStateChanged):", user.uid, user.email);
         if (authButtonsDiv) authButtonsDiv.style.display = 'none';
         if (userProfileDiv) userProfileDiv.style.display = 'block';
-        if (userAvatarImg) userAvatarImg.src = user.photoURL || './assets/images/avatar.jpg';
-
-        localStorage.setItem('userInfo', JSON.stringify({
-            uid: user.uid,
-            email: user.email,
-            displayName: user.displayName,
-            photoURL: user.photoURL
-        }));
-
+        if (userAvatarImg) userAvatarImg.src = user.photoURL || './assets/images/avatar.jpg'; // 路徑問題可能會導致這裡的圖片404
+        localStorage.setItem('userInfo', JSON.stringify({ uid: user.uid, email: user.email, displayName: user.displayName, photoURL: user.photoURL }));
         await loadUserFavorites(user.uid);
         closeModals();
       } else {
-        console.log("使用者已登出");
+        console.log("使用者已登出 (onAuthStateChanged)");
         if (authButtonsDiv) authButtonsDiv.style.display = 'flex';
         if (userProfileDiv) userProfileDiv.style.display = 'none';
         if (userDropdown) userDropdown.style.display = 'none';
         localStorage.removeItem('userInfo');
-        document.querySelectorAll('.favorite-btn.active').forEach(btn => {
+        document.querySelectorAll('.favorite-btn').forEach(btn => {
             btn.classList.remove('active');
-            const icon = btn.querySelector('ion-icon') || btn.querySelector('i');
+            const icon = btn.querySelector('i') || btn.querySelector('ion-icon'); // 修正: 先找 i 再找 ion-icon
             if (icon) {
-                 if (icon.tagName.toLowerCase() === 'ion-icon') {
-                    icon.name = 'heart-outline';
-                 } else {
-                    icon.className = 'fa-heart fa-regular';
-                 }
+                 if (icon.tagName.toLowerCase() === 'ion-icon') icon.name = 'heart-outline';
+                 else icon.className = 'fa-heart fa-regular'; // Font Awesome
             }
         });
       }
     });
 
-    // --- Event Listeners for Forms ---
     if (loginForm) {
       loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1262,10 +940,10 @@
         const password = document.getElementById('login-password').value;
         try {
           await auth.signInWithEmailAndPassword(email, password);
-          console.log("登入成功");
+          console.log("登入表單：登入成功");
           loginForm.reset();
         } catch (error) {
-          console.error("登入錯誤:", error);
+          console.error("登入表單：登入錯誤:", error);
           alert(`登入失敗：${error.message}`);
         }
       });
@@ -1282,16 +960,18 @@
         }
         try {
           const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-          console.log("註冊成功，使用者:", userCredential.user);
+          console.log("註冊表單：註冊成功，使用者:", userCredential.user);
           await db.collection('users').doc(userCredential.user.uid).set({
               email: userCredential.user.email,
+              displayName: userCredential.user.displayName || email.split('@')[0],
+              photoURL: userCredential.user.photoURL || null,
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               favorites: []
           });
           alert('哇哇哇哇哇！您註冊成功了！系統將會自動登入');
           registerForm.reset();
         } catch (error) {
-          console.error("註冊錯誤:", error);
+          console.error("註冊表單：註冊錯誤:", error);
           alert(`註冊失敗：${error.message}`);
         }
       });
@@ -1302,8 +982,8 @@
         try {
           const result = await auth.signInWithPopup(googleProvider);
           const user = result.user;
-          console.log("Google 登入成功，使用者:", user);
-          if (result.additionalUserInfo.isNewUser) {
+          console.log("Google 登入：成功，使用者:", user);
+          if (result.additionalUserInfo && result.additionalUserInfo.isNewUser) {
             await db.collection('users').doc(user.uid).set({
                 email: user.email,
                 displayName: user.displayName,
@@ -1313,13 +993,10 @@
             });
           }
         } catch (error) {
-          console.error("Google 登入錯誤:", error);
+          console.error("Google 登入：錯誤:", error);
           let errorMessage = `Google 登入失敗：${error.message}`;
-          if (error.code === 'auth/popup-closed-by-user') {
-            errorMessage = 'Google 登入視窗已關閉。';
-          } else if (error.code === 'auth/cancelled-popup-request') {
-            errorMessage = 'Google 登入請求已取消（可能是因為開啟了多個視窗）。';
-          }
+          if (error.code === 'auth/popup-closed-by-user') errorMessage = 'Google 登入視窗已關閉。';
+          else if (error.code === 'auth/cancelled-popup-request') errorMessage = 'Google 登入請求已取消。';
           alert(errorMessage);
         }
       });
@@ -1329,15 +1006,14 @@
       logoutBtn.addEventListener('click', async () => {
         try {
           await auth.signOut();
-          console.log("登出成功");
+          console.log("登出按鈕：登出成功");
         } catch (error) {
-          console.error("登出錯誤:", error);
+          console.error("登出按鈕：登出錯誤:", error);
           alert(`登出失敗：${error.message}`);
         }
       });
     }
 
-    // --- Firestore Favorite Movies ---
     async function toggleFavorite(button, movieId, movieTitle, movieImage, movieUrl) {
       const currentUser = auth.currentUser;
       if (!currentUser) {
@@ -1345,88 +1021,149 @@
         showLoginModal();
         return;
       }
+
+      console.log(`[toggleFavorite] 執行中 - 電影 ID: ${movieId}, 標題: ${movieTitle}, 使用者: ${currentUser.uid}`);
+      console.log("[toggleFavorite] 按鈕元素:", button);
+
+      let iconEl = button.querySelector('i'); // 首先嘗試選取 <i> (Font Awesome)
+      if (!iconEl) {
+          iconEl = button.querySelector('ion-icon'); // 如果沒有找到 <i>，再嘗試選取 <ion-icon>
+          if (iconEl) {
+              console.log("[toggleFavorite] 成功選取到 <ion-icon> 元素:", iconEl);
+          }
+      } else {
+          console.log("[toggleFavorite] 成功選取到 <i> 元素 (Font Awesome):", iconEl);
+      }
+
+      if (!iconEl) {
+          console.error("[toggleFavorite] 嚴重錯誤：無法在按鈕內選取到圖示元素 (i 或 ion-icon)！按鈕的 innerHTML:", button.innerHTML);
+      }
+
       const userDocRef = db.collection('users').doc(currentUser.uid);
-      const icon = button.querySelector('ion-icon') || button.querySelector('i');
+
       try {
         const userDoc = await userDocRef.get();
         let favorites = [];
-        if (userDoc.exists && userDoc.data().favorites) {
-          favorites = userDoc.data().favorites;
-        } else if (!userDoc.exists) {
-          await userDocRef.set({ email: currentUser.email, favorites: [] }, { merge: true });
-        }
-        const movieData = { id: movieId, title: movieTitle, image: movieImage, url: movieUrl };
-        const favIndex = favorites.findIndex(fav => fav.id === movieId);
 
-        if (favIndex > -1) { // Movie is already a favorite, remove it
-          const movieToRemove = favorites[favIndex]; // Get the exact object to remove
+        if (userDoc.exists && userDoc.data() && userDoc.data().favorites) {
+          favorites = userDoc.data().favorites;
+          console.log("[toggleFavorite] 從 Firestore 讀取的現有收藏:", JSON.parse(JSON.stringify(favorites)));
+        } else {
+          console.warn(`[toggleFavorite] 使用者 ${currentUser.uid} 的文件不存在或 favorites 欄位不存在/非陣列。將建立/重設 favorites。`);
+          if(!userDoc.exists) {
+            await userDocRef.set({
+              email: currentUser.email,
+              displayName: currentUser.displayName || currentUser.email.split('@')[0],
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              favorites: []
+            }, { merge: true });
+            console.log(`[toggleFavorite] 已為使用者 ${currentUser.uid} 建立文件並初始化 favorites。`);
+          } else if (!userDoc.data().favorites || !Array.isArray(userDoc.data().favorites)) {
+            await userDocRef.update({ favorites: [] });
+             console.log(`[toggleFavorite] 已為使用者 ${currentUser.uid} 的 favorites 欄位重設為空陣列。`);
+          }
+          favorites = [];
+        }
+        if (!Array.isArray(favorites)) favorites = [];
+
+        const movieData = { id: movieId, title: movieTitle, image: movieImage, url: movieUrl };
+        const favoriteIndex = favorites.findIndex(fav => fav.id === movieId);
+        console.log(`[toggleFavorite] 電影 "${movieTitle}" 在收藏中的索引: ${favoriteIndex}`);
+
+        if (favoriteIndex > -1) {
+          const movieToRemove = favorites[favoriteIndex];
+          console.log("[toggleFavorite] 準備從收藏中移除電影:", JSON.parse(JSON.stringify(movieToRemove)));
           await userDocRef.update({
             favorites: firebase.firestore.FieldValue.arrayRemove(movieToRemove)
           });
-          if (icon) {
-              if (icon.tagName.toLowerCase() === 'ion-icon') { icon.name = 'heart-outline'; }
-              else { icon.className = 'fa-heart fa-regular'; }
+          if (iconEl) {
+            console.log("[toggleFavorite] 更新圖示為空心。目前 tagName:", iconEl.tagName);
+            if (iconEl.tagName.toLowerCase() === 'ion-icon') iconEl.name = 'heart-outline';
+            else iconEl.className = 'fa-heart fa-regular'; // Font Awesome
           }
           button.classList.remove('active');
-          console.log(`電影 ${movieId} 已從收藏中移除`);
-        } else { // Movie is not a favorite, add it
+          console.log(`[toggleFavorite] ClassList after remove active:`, button.classList);
+          console.log(`電影 ${movieTitle} (ID: ${movieId}) 已成功從收藏中移除`);
+        } else {
+          console.log("[toggleFavorite] 準備將電影加入收藏:", JSON.parse(JSON.stringify(movieData)));
           await userDocRef.update({
             favorites: firebase.firestore.FieldValue.arrayUnion(movieData)
           });
-          if (icon) {
-              if (icon.tagName.toLowerCase() === 'ion-icon') { icon.name = 'heart'; }
-              else { icon.className = 'fa-heart fa-solid'; }
+          if (iconEl) {
+            console.log("[toggleFavorite] 更新圖示為實心。目前 tagName:", iconEl.tagName);
+            if (iconEl.tagName.toLowerCase() === 'ion-icon') iconEl.name = 'heart';
+            else iconEl.className = 'fa-heart fa-solid'; // Font Awesome
           }
           button.classList.add('active');
-          console.log(`電影 ${movieId} 已加入收藏`);
+          console.log(`[toggleFavorite] ClassList after add active:`, button.classList);
+          console.log(`電影 ${movieTitle} (ID: ${movieId}) 已成功加入收藏`);
         }
       } catch (error) {
-        console.error("切換收藏錯誤:", error);
-        alert("操作收藏失敗，請稍後再試！");
+        console.error("[toggleFavorite] 切換收藏時發生錯誤:", error);
+        // 在這裡可以加入更友好的錯誤提示給使用者
+        // alert("操作收藏失敗，請檢查網路連線並稍後再試！");
       }
     }
 
     async function loadUserFavorites(uid) {
-      if (!uid) return;
+      if (!uid) {
+        console.warn("[loadUserFavorites] UID 為空，無法載入收藏。");
+        return;
+      }
+      console.log(`[loadUserFavorites] 準備為使用者 ${uid} 載入收藏`);
       try {
         const userDocRef = db.collection('users').doc(uid);
         const userDoc = await userDocRef.get();
-        if (userDoc.exists && userDoc.data().favorites) {
-          const favorites = userDoc.data().favorites;
-          document.querySelectorAll('.movie-card').forEach(card => {
-            const movieLink = card.querySelector('a[href^="./movie-details-"]');
-            if (!movieLink) return;
-            const movieId = movieLink.getAttribute('href').substring(2);
-            const favButton = card.querySelector('.favorite-btn');
-            if (!favButton) return;
-            const isFav = favorites.some(fav => fav.id === movieId);
-            const icon = favButton.querySelector('ion-icon') || favButton.querySelector('i');
-            if (isFav) {
-              favButton.classList.add('active');
-              if (icon) {
-                if (icon.tagName.toLowerCase() === 'ion-icon') { icon.name = 'heart'; }
-                else { icon.className = 'fa-heart fa-solid'; }
-              }
-            } else {
-              favButton.classList.remove('active');
-              if (icon) {
-                if (icon.tagName.toLowerCase() === 'ion-icon') { icon.name = 'heart-outline'; }
-                else { icon.className = 'fa-heart fa-regular'; }
-              }
-            }
-          });
+        let favorites = [];
+        if (userDoc.exists && userDoc.data() && Array.isArray(userDoc.data().favorites)) {
+          favorites = userDoc.data().favorites;
+        } else {
+          console.log(`[loadUserFavorites] 使用者 ${uid} 沒有收藏，或 favorites 格式不正確。`);
         }
+        console.log(`[loadUserFavorites] 從 Firestore 讀取到的收藏 (使用者 ${uid}):`, JSON.parse(JSON.stringify(favorites)));
+
+        document.querySelectorAll('.movie-card').forEach(card => {
+          const movieLink = card.querySelector('a[href^="./movie-details-"]');
+          if (!movieLink) return;
+          const movieUrl = movieLink.getAttribute('href');
+          const movieId = movieUrl.substring(2);
+          const favButton = card.querySelector('.favorite-btn');
+          if (!favButton) return;
+
+          const isFav = favorites.some(fav => fav.id === movieId);
+          let icon = favButton.querySelector('i'); // 首先嘗試選取 <i> (Font Awesome)
+          if (!icon) {
+              icon = favButton.querySelector('ion-icon'); // 如果沒有找到 <i>，再嘗試選取 <ion-icon>
+          }
+
+          // console.log(`[loadUserFavorites] 卡片: ${movieId}, 是否收藏: ${isFav}, 選取的圖示:`, icon);
+
+          if (isFav) {
+            favButton.classList.add('active');
+            if (icon) {
+              if (icon.tagName.toLowerCase() === 'ion-icon') icon.name = 'heart';
+              else icon.className = 'fa-heart fa-solid'; // Font Awesome
+            }
+          } else {
+            favButton.classList.remove('active');
+            if (icon) {
+              if (icon.tagName.toLowerCase() === 'ion-icon') icon.name = 'heart-outline';
+              else icon.className = 'fa-heart fa-regular'; // Font Awesome
+            }
+          }
+        });
+        console.log("[loadUserFavorites] 更新所有電影卡愛心圖示完成。");
       } catch (error) {
-        console.error("載入收藏錯誤:", error);
+        console.error("[loadUserFavorites] 載入使用者收藏時發生錯誤:", error);
       }
     }
 
-    // --- Dynamically add favorite buttons and attach event listeners ---
     document.addEventListener('DOMContentLoaded', function() {
+      console.log("[DOMContentLoaded] DOM 已完全載入並解析。");
       document.querySelectorAll('.movie-card').forEach(function(card) {
         const cardMeta = card.querySelector('.card-meta');
         if (!cardMeta) {
-            console.warn("找不到電影卡的 card meta:", card);
+            // console.warn("[DOMContentLoaded] 找不到電影卡的 .card-meta 元素:", card);
             return;
         }
         const titleElement = card.querySelector('.card-title');
@@ -1437,28 +1174,27 @@
         const imageElement = card.querySelector('.card-banner img');
         const movieImage = imageElement ? imageElement.getAttribute('src') : null;
 
-        if (!movieId || !movieImage || !movieUrl) {
-            console.warn("無法提取 movieId, movieImage, 或 movieUrl:", card);
+        if (!movieId || !movieTitle || !movieImage || !movieUrl) {
             return;
         }
-        if (card.querySelector('.favorite-btn')) return;
+        if (card.querySelector('.favorite-btn')) {
+            return;
+        }
 
         const btn = document.createElement('button');
         btn.className = 'favorite-btn';
-        btn.innerHTML = '<i class="fa-heart fa-regular"></i>'; // Default to Font Awesome
-        // Style applied via CSS now
+        btn.innerHTML = '<i class="fa-heart fa-regular movie-card-fav-icon"></i>'; // 添加一個特定的 class 以便選取
 
         btn.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
+          console.log(`[DOMContentLoaded] 愛心按鈕被點擊 - 電影 ID: ${movieId}`);
           toggleFavorite(this, movieId, movieTitle, movieImage, movieUrl);
         });
 
         const ratingDiv = cardMeta.querySelector('.rating');
-        if (ratingDiv && ratingDiv.nextSibling) {
+        if (ratingDiv) {
             ratingDiv.parentNode.insertBefore(btn, ratingDiv.nextSibling);
-        } else if (ratingDiv) {
-            ratingDiv.parentNode.appendChild(btn);
         } else {
             cardMeta.appendChild(btn);
         }
@@ -1466,7 +1202,10 @@
 
       const currentUser = auth.currentUser;
       if (currentUser) {
+        console.log("[DOMContentLoaded] 目前使用者已登入，準備載入收藏。");
         loadUserFavorites(currentUser.uid);
+      } else {
+        console.log("[DOMContentLoaded] 目前沒有使用者登入。");
       }
     });
   </script>
