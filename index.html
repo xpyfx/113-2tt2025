@@ -23,14 +23,13 @@
 
   <style>
     :root {
-      --radical-red: #FF3366; /* 確保這個變數有定義 */
-      /* 來自您新 HTML 的其他變數 (如果需要可以取消註解並調整) */
+      --radical-red: #FF3366;
       --white: #FFFFFF;
       --light-gray: #CCCCCC;
       --eerie-black-1: #1a1a1a;
       --eerie-black-2: #2a2a2a;
       --jet: #333333;
-      --citrine: #E8D95D; /* 原來的黃色 */
+      --citrine: #E8D95D;
       --gray-x: #AAAAAA;
     }
     .modal {
@@ -41,46 +40,19 @@
       background-color: var(--eerie-black-1); margin: auto; padding: 25px; border: 1px solid var(--jet);
       width: 90%; max-width: 450px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); color: var(--white);
     }
-
-    .modal-content h2 {
-      color: #f5a8bc; /* 您的新顏色 */
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      color: var(--gray-x);
-      display: block;
-      margin-bottom: 8px;
-    }
-
+    .modal-content h2 { color: #f5a8bc; text-align: center; margin-bottom: 20px; }
+    .form-group label { color: var(--gray-x); display: block; margin-bottom: 8px; }
     .form-group input {
       width: 100%; padding: 10px; border: 1px solid var(--jet); border-radius: 6px;
       background-color: var(--eerie-black-2); color: var(--white); box-sizing: border-box;
     }
-    .form-group input:focus {
-      border-color: var(--citrine); /* 保留原來的 focus 顏色 */
-      outline: none;
-    }
-
+    .form-group input:focus { border-color: var(--citrine); outline: none; }
     .submit-btn {
-      background-color: #f5a8bc; /* 您的新顏色 */
-      color: var(--eerie-black-1); /* 可能需要調整以確保對比度 */
-      border: none;
-      padding: 12px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 16px;
-      font-weight: 600;
-      transition: background-color 0.3s;
-      margin-top: 15px;
+      background-color: #f5a8bc; color: var(--eerie-black-1); border: none; padding: 12px 20px;
+      border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; font-weight: 600;
+      transition: background-color 0.3s; margin-top: 15px;
     }
-
-    .submit-btn:hover {
-      background-color: #ff7897; /* 您的新 hover 顏色 */
-    }
-
+    .submit-btn:hover { background-color: #ff7897; }
     #google-signin-btn {
         background-color: #4285F4; color: white; border: none; padding: 12px 15px; border-radius: 6px;
         cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
@@ -88,39 +60,42 @@
     }
     #google-signin-btn:hover { background-color: #357ae8; }
     #google-signin-btn .fab { margin-right: 10px; }
-    .dropdown-menu {
-        display:none; position:absolute; background-color:var(--eerie-black-1); border:1px solid var(--jet);
-        padding:10px; border-radius:8px; right: 0; top: calc(100% + 5px); z-index:1001;
-        min-width: 150px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    .dropdown-menu { /* 確保初始是隱藏的 */
+        display:none;
+        position:absolute;
+        background-color:var(--eerie-black-1);
+        border:1px solid var(--jet);
+        padding:10px;
+        border-radius:8px;
+        right: 0;
+        top: calc(100% + 10px); /* 稍微增加與頭像的距離 */
+        z-index:1001;
+        min-width: 150px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    .dropdown-menu.show { /* 用於 JavaScript 切換顯示 */
+        display: block;
     }
     .dropdown-menu a, .dropdown-menu button {
         display:block; color:var(--white); padding:10px 15px; text-decoration: none; border-radius: 4px;
         background: none; border: none; width: 100%; text-align: left; cursor: pointer;
     }
     .dropdown-menu a:hover, .dropdown-menu button:hover {
-        background-color: var(--eerie-black-2); color: var(--citrine) !important; /* 保留原來的 hover 顏色 */
+        background-color: var(--eerie-black-2); color: var(--citrine) !important;
     }
     #user-avatar-img { cursor: pointer; }
     .navbar-actions { position: relative; }
-
     .favorite-btn {
         background: none; border: none; cursor: pointer; padding: 0.5rem;
         color: var(--light-gray); margin-left: 8px; line-height: 1;
     }
-    .favorite-btn svg { /* 直接針對按鈕內的 SVG */
-        font-size: 1.5rem;
-        vertical-align: middle;
+    .favorite-btn svg {
+        font-size: 1.5rem; vertical-align: middle;
         transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
-    .favorite-btn:hover svg {
-        color: var(--radical-red);
-    }
-    .favorite-btn.active { /* 當按鈕有 active class 時，改變按鈕的 color */
-        color: var(--radical-red) !important;
-    }
-    .favorite-btn.active svg { /* SVG 會繼承按鈕的 color */
-        transform: scale(1.1) !important;
-    }
+    .favorite-btn:hover svg { color: var(--radical-red); }
+    .favorite-btn.active { color: var(--radical-red) !important; }
+    .favorite-btn.active svg { transform: scale(1.1) !important; }
   </style>
 </head>
 
@@ -164,8 +139,9 @@
           <button class="btn btn-outline" onclick="showRegisterModal()">註冊</button>
         </div>
         <div id="user-profile" style="display: none;">
-          <img src="./assets/images/avatar.jpg" alt="用戶頭貼" class="avatar" id="user-avatar-img" onclick="toggleUserDropdown()">
-          <div id="user-dropdown" class="dropdown-menu">
+          <!-- onclick 事件已在 JS 中通過 addEventListener 綁定 -->
+          <img src="./assets/images/avatar.jpg" alt="用戶頭貼" class="avatar" id="user-avatar-img">
+          <div id="user-dropdown" class="dropdown-menu"> <!-- 初始 display:none -->
             <a href="user.html">會員中心</a>
             <button id="logout-btn">登出</button>
           </div>
@@ -174,6 +150,7 @@
     </div>
   </header>
 
+  <!-- Modals (Login, Register) remain the same -->
   <div id="login-modal" class="modal">
     <div class="modal-content">
       <span class="close" onclick="closeModals()" style="color: #aaa; float: right; font-size: 28px; font-weight: bold; cursor: pointer;">×</span>
@@ -193,7 +170,7 @@
         <i class="fab fa-google"></i> 使用 Google 帳號登入
       </button>
       <div style="text-align: center; margin-top: 15px;">
-        <p>還沒有帳號？ <a href="#" onclick="event.preventDefault(); showRegisterModal();" style="color: #f5a8bc;">立即註冊</a></p> <!-- 您的新顏色 -->
+        <p>還沒有帳號？ <a href="#" onclick="event.preventDefault(); showRegisterModal();" style="color: #f5a8bc;">立即註冊</a></p>
       </div>
     </div>
   </div>
@@ -214,7 +191,7 @@
         <button type="submit" class="submit-btn">註冊</button>
       </form>
        <div style="text-align: center; margin-top: 15px;">
-        <p>已經有帳號？ <a href="#" onclick="event.preventDefault(); showLoginModal();" style="color: #f5a8bc;">立即登入</a></p> <!-- 您的新顏色 -->
+        <p>已經有帳號？ <a href="#" onclick="event.preventDefault(); showLoginModal();" style="color: #f5a8bc;">立即登入</a></p>
       </div>
     </div>
   </div>
@@ -247,7 +224,7 @@
         </div>
       </section>
 
-      <!-- Movie sections -->
+      <!-- Movie sections (Suspense, Drama, Encouragement, All) remain structurally the same -->
       <section class="upcoming" id="suspense" data-aos="fade-up">
         <div class="container">
           <div class="flex-wrapper">
@@ -890,7 +867,7 @@
   <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
 
   <script>
-       // Firebase Configuration (保持不變)
+    // Firebase Configuration
     const firebaseConfig = {
         apiKey: "AIzaSyA2w4v4NGa1xbiGWCCFBgPEVipsHQ1ELHU",
         authDomain: "wmtm-f8685.firebaseapp.com",
@@ -907,9 +884,6 @@
     const googleProvider = new firebase.auth.GoogleAuthProvider();
 
     const defaultAvatarSvgDataUri = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0iIzAwMDAwMCIgZD0iTTYyOC43MzYgNTI4Ljg5NkE0MTYgNDE2IDAgMCAxIDkyOCA5MjhIOTZhNDE1Ljg3MiA0MTUuODcyIDAgMCAxIDI5OS4yNjQtMzk5LjEwNEw1MTIgNzA0bDExNi43MzYtMTc1LjEwNHpNNzIwIDMwNGEyMDggMjA4IDAgMSAxLTQxNiAwIDIwOCAyMDggMCAwIDEgNDE2IDB6Ii8+PC9zdmc+";
-    // 白色填充 SVG Data URI (如果需要)
-    // const defaultAvatarSvgDataUri = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwcHgiIGhlaWdodD0iODAwcHgiIHZpZXdCb3g9IjAgMCAxMDI0IDEwMjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZmlsbD0iI0ZGRkZGRiIgZD0iTTYyOC43MzYgNTI4Ljg5NkE0MTYgNDE2IDAgMCAxIDkyOCA5MjhIOTZhNDE1Ljg3MiA0MTUuODcyIDAgMCAxIDI5OS4yNjQtMzk5LjEwNEw1MTIgNzA0bDExNi43MzYtMTc1LjEwNHpNNzIwIDMwNGEyMDggMjA4IDAgMSAxLTQxNiAwIDIwOCAyMDggMCAwIDEgNDE2IDB6Ii8+PC9zdmc+";
-
 
     const loginModal = document.getElementById('login-modal');
     const registerModal = document.getElementById('register-modal');
@@ -922,11 +896,48 @@
     const userAvatarImg = document.getElementById('user-avatar-img');
     const userDropdown = document.getElementById('user-dropdown');
 
-    function showLoginModal() { /* ... (不變) ... */ }
-    function showRegisterModal() { /* ... (不變) ... */ }
-    function closeModals() { /* ... (不變) ... */ }
-    window.onclick = function(event) { /* ... (不變) ... */ }
-    function toggleUserDropdown() { /* ... (不變) ... */ }
+    function showLoginModal() {
+      if (loginModal) loginModal.style.display = 'flex';
+      if (registerModal) registerModal.style.display = 'none';
+    }
+    function showRegisterModal() {
+      if (registerModal) registerModal.style.display = 'flex';
+      if (loginModal) loginModal.style.display = 'none';
+    }
+    function closeModals() {
+      if (loginModal) loginModal.style.display = 'none';
+      if (registerModal) registerModal.style.display = 'none';
+    }
+
+    window.onclick = function(event) {
+      if (event.target === loginModal && loginModal) loginModal.style.display = "none";
+      if (event.target === registerModal && registerModal) registerModal.style.display = "none";
+      // 修正：確保點擊頭像本身不會觸發關閉下拉選單
+      if (userDropdown && userDropdown.classList.contains('show') && !userAvatarImg.contains(event.target) && !userDropdown.contains(event.target)) {
+          userDropdown.classList.remove('show');
+          console.log("[window.onclick] Dropdown closed by clicking outside.");
+      }
+    }
+
+    // --- >>> 修改：toggleUserDropdown 使用 classList.toggle <<< ---
+    function toggleUserDropdown() {
+        if (userDropdown) {
+            userDropdown.classList.toggle('show');
+            console.log("[toggleUserDropdown] Dropdown classList:", userDropdown.classList);
+        } else {
+            console.warn("[toggleUserDropdown] userDropdown element not found!");
+        }
+    }
+    // --- >>> 修改：將 onclick 從 HTML 移到 JS <<< ---
+    if (userAvatarImg) {
+        userAvatarImg.addEventListener('click', function(event) {
+            event.stopPropagation(); // 防止事件冒泡到 window.onclick
+            toggleUserDropdown();
+        });
+    } else {
+        console.warn("userAvatarImg element not found for click listener attachment.");
+    }
+
 
     auth.onAuthStateChanged(async user => {
       if (user) {
@@ -949,11 +960,11 @@
         console.log("使用者已登出 (onAuthStateChanged)");
         if (authButtonsDiv) authButtonsDiv.style.display = 'flex';
         if (userProfileDiv) userProfileDiv.style.display = 'none';
-        if (userDropdown) userDropdown.style.display = 'none';
+        if (userDropdown) userDropdown.classList.remove('show'); // 登出時明確隱藏
         localStorage.removeItem('userInfo');
         document.querySelectorAll('.favorite-btn').forEach(btn => {
             btn.classList.remove('active');
-            const svgIcon = btn.querySelector('svg.movie-card-fav-icon'); // 正確選取 SVG
+            const svgIcon = btn.querySelector('svg.movie-card-fav-icon');
             if (svgIcon) {
                 svgIcon.classList.remove('fas', 'fa-solid');
                 svgIcon.classList.add('far', 'fa-regular');
@@ -964,11 +975,22 @@
     });
 
     if (loginForm) {
-      loginForm.addEventListener('submit', async (e) => { /* ... (不變) ... */ });
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('login-username').value;
+        const password = document.getElementById('login-password').value;
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+          loginForm.reset();
+        } catch (error) {
+          console.error("登入表單：登入錯誤:", error);
+          alert(`登入失敗：${error.message}`);
+        }
+      });
     }
 
     if (registerForm) {
-      registerForm.addEventListener('submit', async (e) => { /* ... (大部分不變，確認 photoURL 設定) ... */
+      registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const email = document.getElementById('register-username').value;
         const password = document.getElementById('register-password').value;
@@ -992,7 +1014,7 @@
           await db.collection('users').doc(userCredential.user.uid).set({
               email: userCredential.user.email,
               displayName: userCredential.user.displayName || email.split('@')[0],
-              photoURL: defaultAvatarSvgDataUri, // 確保 Firestore 也有預設頭像
+              photoURL: defaultAvatarSvgDataUri,
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               favorites: []
           });
@@ -1008,11 +1030,38 @@
     }
 
     if (googleSignInBtn) {
-      googleSignInBtn.addEventListener('click', async () => { /* ... (不變) ... */ });
+      googleSignInBtn.addEventListener('click', async () => {
+        try {
+          const result = await auth.signInWithPopup(googleProvider);
+          const user = result.user;
+          if (result.additionalUserInfo && result.additionalUserInfo.isNewUser) {
+            await db.collection('users').doc(user.uid).set({
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL, // Google 登入通常會有 photoURL
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                favorites: []
+            });
+          }
+        } catch (error) {
+          console.error("Google 登入：錯誤:", error);
+          let errorMessage = `Google 登入失敗：${error.message}`;
+          if (error.code === 'auth/popup-closed-by-user') errorMessage = 'Google 登入視窗已關閉。';
+          else if (error.code === 'auth/cancelled-popup-request') errorMessage = 'Google 登入請求已取消。';
+          alert(errorMessage);
+        }
+      });
     }
 
     if (logoutBtn) {
-      logoutBtn.addEventListener('click', async () => { /* ... (不變) ... */ });
+      logoutBtn.addEventListener('click', async () => {
+        try {
+          await auth.signOut();
+        } catch (error) {
+          console.error("登出按鈕：登出錯誤:", error);
+          alert(`登出失敗：${error.message}`);
+        }
+      });
     }
 
     async function toggleFavorite(button, movieId, movieTitle, movieImage, movieUrl) {
@@ -1024,10 +1073,10 @@
       }
 
       console.log(`[toggleFavorite] Action - MovieID: ${movieId}, Title: ${movieTitle}`);
-      const svgIcon = button.querySelector('svg.movie-card-fav-icon'); // 選取轉換後的 SVG
+      const svgIcon = button.querySelector('svg.movie-card-fav-icon');
       if (!svgIcon) {
           console.error("[toggleFavorite] CRITICAL: SVG icon (svg.movie-card-fav-icon) not found! Button HTML:", button.innerHTML);
-          // 如果找不到圖示，我們仍然嘗試更新 Firestore，但 UI 可能不會立即反應
+          return;
       } else {
           console.log("[toggleFavorite] Found SVG icon:", svgIcon);
       }
@@ -1062,22 +1111,18 @@
           await userDocRef.update({
             favorites: firebase.firestore.FieldValue.arrayRemove(movieToRemove)
           });
-          if (svgIcon) {
-            svgIcon.classList.remove('fas', 'fa-solid'); // Solid (實心)
-            svgIcon.classList.add('far', 'fa-regular');    // Regular (空心)
-            svgIcon.setAttribute('data-prefix', 'far'); // Font Awesome 6 依賴 data-prefix
-          }
+          svgIcon.classList.remove('fas', 'fa-solid');
+          svgIcon.classList.add('far', 'fa-regular');
+          svgIcon.setAttribute('data-prefix', 'far');
           button.classList.remove('active');
           console.log(`[toggleFavorite] Removed: ${movieTitle}`);
         } else {
           await userDocRef.update({
             favorites: firebase.firestore.FieldValue.arrayUnion(movieData)
           });
-          if (svgIcon) {
-            svgIcon.classList.remove('far', 'fa-regular');
-            svgIcon.classList.add('fas', 'fa-solid');
-            svgIcon.setAttribute('data-prefix', 'fas'); // Font Awesome 6 依賴 data-prefix
-          }
+          svgIcon.classList.remove('far', 'fa-regular');
+          svgIcon.classList.add('fas', 'fa-solid');
+          svgIcon.setAttribute('data-prefix', 'fas');
           button.classList.add('active');
           console.log(`[toggleFavorite] Added: ${movieTitle}`);
         }
@@ -1107,9 +1152,7 @@
           if (!favButton) return;
 
           const isFav = favorites.some(fav => fav.id === movieId);
-          const svgIcon = favButton.querySelector('svg.movie-card-fav-icon'); // 選取轉換後的 SVG
-
-          // console.log(`[loadUserFavorites] Card: ${movieId}, isFav: ${isFav}, SVG Icon:`, svgIcon);
+          const svgIcon = favButton.querySelector('svg.movie-card-fav-icon');
 
           if (isFav) {
             favButton.classList.add('active');
@@ -1137,10 +1180,7 @@
       console.log("[DOMContentLoaded] DOM fully loaded and parsed.");
       document.querySelectorAll('.movie-card').forEach(function(card) {
         const cardMeta = card.querySelector('.card-meta');
-        if (!cardMeta) {
-            console.warn("[DOMContentLoaded] Cannot find .card-meta for card:", card);
-            return;
-        }
+        if (!cardMeta) return;
         const titleElement = card.querySelector('.card-title');
         const movieTitle = titleElement ? titleElement.textContent.trim() : '未知標題';
         const linkElement = card.querySelector('a[href^="./movie-details-"]');
@@ -1149,22 +1189,12 @@
         const imageElement = card.querySelector('.card-banner img');
         const movieImage = imageElement ? imageElement.getAttribute('src') : null;
 
-        if (!movieId || !movieTitle || !movieImage || !movieUrl) {
-            console.warn("[DOMContentLoaded] Missing movie data for card:", {movieId, movieTitle, movieImage, movieUrl, card});
-            return;
-        }
-        // 避免重複添加按鈕
-        if (card.querySelector('.favorite-btn')) {
-            // console.log("[DOMContentLoaded] Favorite button already exists for:", movieId);
-            return;
-        }
+        if (!movieId || !movieTitle || !movieImage || !movieUrl) return;
+        if (card.querySelector('.favorite-btn')) return;
 
         const btn = document.createElement('button');
         btn.className = 'favorite-btn';
-        // **重要**: Font Awesome JS 會掃描並轉換 <i> 標籤。
-        // 我們添加 'movie-card-fav-icon' class 到 <i> 標籤，
-        // Font Awesome JS 轉換成 <svg> 後，這個 class 通常會被轉移到 <svg> 元素上。
-        btn.innerHTML = '<i class="far fa-heart movie-card-fav-icon"></i>'; // 初始為空心
+        btn.innerHTML = '<i class="far fa-heart movie-card-fav-icon"></i>';
 
         btn.addEventListener('click', function(e) {
           e.preventDefault();
@@ -1175,24 +1205,19 @@
 
         const ratingDiv = cardMeta.querySelector('.rating');
         if (ratingDiv) {
-            // 插入到 rating 元素的後面，如果 rating 是最後一個元素，則在其後附加
             if (ratingDiv.nextSibling) {
                 ratingDiv.parentNode.insertBefore(btn, ratingDiv.nextSibling);
             } else {
                 ratingDiv.parentNode.appendChild(btn);
             }
         } else {
-            // 如果沒有 ratingDiv，則直接附加到 cardMeta 的末尾
             cardMeta.appendChild(btn);
-            console.warn("[DOMContentLoaded] No .rating div found in .card-meta, appending button to cardMeta for:", movieId);
         }
       });
 
-      // DOMContentLoaded 後，如果用戶已登入，立即嘗試加載收藏夾
-      // 這樣可以避免在 onAuthStateChanged 延遲時 UI 未更新
       const currentUser = auth.currentUser;
       if (currentUser) {
-        console.log("[DOMContentLoaded] Current user is logged in. Attempting to load favorites.");
+        console.log("[DOMContentLoaded] Current user logged in, loading favorites.");
         loadUserFavorites(currentUser.uid);
       } else {
         console.log("[DOMContentLoaded] No current user on DOMContentLoaded.");
