@@ -23,7 +23,14 @@
 
   <style>
     :root {
-      --radical-red: #FF3366; /* 確保這個變數有定義 */
+      --radical-red: #FF3366;
+      --white: #FFFFFF;
+      --light-gray: #CCCCCC;
+      --eerie-black-1: #1a1a1a;
+      --eerie-black-2: #2a2a2a;
+      --jet: #333333;
+      --citrine: #E8D95D;
+      --gray-x: #AAAAAA;
     }
     .modal {
       display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
@@ -33,48 +40,19 @@
       background-color: var(--eerie-black-1); margin: auto; padding: 25px; border: 1px solid var(--jet);
       width: 90%; max-width: 450px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.3); color: var(--white);
     }
-
-    .modal-content h2 {
-      color: #f5a8bc; /* Heading color */
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      color: var(--gray-x);
-      display: block;
-      margin-bottom: 8px;
-    }
-
+    .modal-content h2 { color: #f5a8bc; text-align: center; margin-bottom: 20px; }
+    .form-group label { color: var(--gray-x); display: block; margin-bottom: 8px; }
     .form-group input {
       width: 100%; padding: 10px; border: 1px solid var(--jet); border-radius: 6px;
       background-color: var(--eerie-black-2); color: var(--white); box-sizing: border-box;
     }
-    .form-group input:focus {
-      border-color: var(--citrine);
-      outline: none;
+    .form-group input:focus { border-color: var(--citrine); outline: none; }
+    .submit-btn {
+      background-color: #f5a8bc; color: var(--eerie-black-1); border: none; padding: 12px 20px;
+      border-radius: 6px; cursor: pointer; width: 100%; font-size: 16px; font-weight: 600;
+      transition: background-color 0.3s; margin-top: 15px;
     }
-
-
-    .submit-btn { /* General submit button style for modals */
-      background-color: #f5a8bc;
-      color: var(--eerie-black-1);
-      border: none;
-      padding: 12px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 16px;
-      font-weight: 600;
-      transition: background-color 0.3s;
-      margin-top: 15px;
-    }
-
-    .submit-btn:hover {
-      background-color: #ff7897; /* Lighter citrine */
-    }
-
-    /* Google Sign In Button Style */
+    .submit-btn:hover { background-color: #ff7897; }
     #google-signin-btn {
         background-color: #4285F4; color: white; border: none; padding: 12px 15px; border-radius: 6px;
         cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center;
@@ -100,19 +78,13 @@
         background: none; border: none; cursor: pointer; padding: 0.5rem;
         color: var(--light-gray); margin-left: 8px; line-height: 1;
     }
-    .favorite-btn i, .favorite-btn ion-icon {
+    .favorite-btn svg {
         font-size: 1.5rem; vertical-align: middle;
         transition: color 0.2s ease-in-out, transform 0.2s ease-in-out;
     }
-    .favorite-btn.active i,
-    .favorite-btn.active ion-icon {
-        color: var(--radical-red) !important; /* 強制！ */
-        transform: scale(1.1) !important; /* 強制！ */
-    }
-    .favorite-btn:hover i,
-    .favorite-btn:hover ion-icon {
-        color: #f5a8bc;
-    }
+    .favorite-btn:hover svg { color: var(--radical-red); }
+    .favorite-btn.active { color: var(--radical-red) !important; }
+    .favorite-btn.active svg { transform: scale(1.1) !important; }
   </style>
 </head>
 
@@ -185,7 +157,7 @@
         <i class="fab fa-google"></i> 使用 Google 帳號登入
       </button>
       <div style="text-align: center; margin-top: 15px;">
-        <p>還沒有帳號？ <a href="#" onclick="event.preventDefault(); showRegisterModal();" style="color: var(--citrine);">立即註冊</a></p>
+        <p>還沒有帳號？ <a href="#" onclick="event.preventDefault(); showRegisterModal();" style="color: #f5a8bc;">立即註冊</a></p>
       </div>
     </div>
   </div>
@@ -239,8 +211,7 @@
         </div>
       </section>
 
-      <!-- Movie sections (Suspense, Drama, Encouragement, All) remain structurally the same -->
-      <!-- Example for one movie card, others should follow this structure -->
+      <!-- Movie sections -->
       <section class="upcoming" id="suspense" data-aos="fade-up">
         <div class="container">
           <div class="flex-wrapper">
@@ -269,11 +240,9 @@
                   <div class="badge badge-outline">HD</div>
                   <div class="duration"><ion-icon name="time-outline"></ion-icon><time datetime="PT121M">121 分鐘</time></div>
                   <div class="rating"><ion-icon name="star"></ion-icon><data>6.5</data></div>
-                  <!-- Favorite button will be dynamically added here by JS -->
                 </div>
               </div>
             </li>
-            <!-- Other movies in Suspense section -->
             <li>
               <div class="movie-card">
                 <a href="./movie-details-17.html">
@@ -887,7 +856,7 @@
   <script>
     // Firebase Configuration
     const firebaseConfig = {
-        apiKey: "AIzaSyA2w4v4NGa1xbiGWCCFBgPEVipsHQ1ELHU",
+        apiKey: "AIzaSyA2w4v4NGa1xbiGWCCFBgPEVipsHQ1ELHU", // 請替換為您的 Firebase API Key
         authDomain: "wmtm-f8685.firebaseapp.com",
         projectId: "wmtm-f8685",
         storageBucket: "wmtm-f8685.appspot.com",
@@ -900,6 +869,9 @@
     const auth = firebase.auth();
     const db = firebase.firestore();
     const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+    // --- >>> 新增：固定大頭貼 URL <<< ---
+    const defaultAvatarUrl = "https://placekitten.com/200/200"; // 您可以替換成任何您喜歡的公開圖片 URL
 
     const loginModal = document.getElementById('login-modal');
     const registerModal = document.getElementById('register-modal');
@@ -941,8 +913,31 @@
         console.log("使用者已登入 (onAuthStateChanged):", user.uid, user.email);
         if (authButtonsDiv) authButtonsDiv.style.display = 'none';
         if (userProfileDiv) userProfileDiv.style.display = 'block';
-        if (userAvatarImg) userAvatarImg.src = user.photoURL || './assets/images/avatar.jpg'; // 路徑問題可能會導致這裡的圖片404
-        localStorage.setItem('userInfo', JSON.stringify({ uid: user.uid, email: user.email, displayName: user.displayName, photoURL: user.photoURL }));
+
+        // --- >>> 修改：設定大頭貼邏輯 <<< ---
+        let userPhotoURL = defaultAvatarUrl; // 預設大頭貼
+        if (user.photoURL) { // 如果 Firebase Auth 提供 photoURL (通常是 Google 登入)
+            userPhotoURL = user.photoURL;
+        } else {
+            // 嘗試從 Firestore 讀取該使用者的 photoURL (如果我們在註冊時儲存了)
+            try {
+                const userDocRef = db.collection('users').doc(user.uid);
+                const userDoc = await userDocRef.get();
+                if (userDoc.exists && userDoc.data().photoURL) {
+                    userPhotoURL = userDoc.data().photoURL;
+                } else if (userDoc.exists && !userDoc.data().photoURL) {
+                    // 如果 Firestore 中沒有 photoURL，但使用者文件存在，則更新為 defaultAvatarUrl
+                    console.log(`使用者 ${user.uid} 在 Firestore 中沒有 photoURL，設定為預設大頭貼。`);
+                    await userDocRef.update({ photoURL: defaultAvatarUrl });
+                }
+            } catch (error) {
+                console.error("從 Firestore 讀取 photoURL 失敗:", error);
+            }
+        }
+        if (userAvatarImg) userAvatarImg.src = userPhotoURL;
+        // --- >>> 修改結束 <<< ---
+
+        localStorage.setItem('userInfo', JSON.stringify({ uid: user.uid, email: user.email, displayName: user.displayName, photoURL: userPhotoURL }));
         await loadUserFavorites(user.uid);
         closeModals();
       } else {
@@ -953,10 +948,11 @@
         localStorage.removeItem('userInfo');
         document.querySelectorAll('.favorite-btn').forEach(btn => {
             btn.classList.remove('active');
-            const icon = btn.querySelector('i') || btn.querySelector('ion-icon'); // 修正: 先找 i 再找 ion-icon
-            if (icon) {
-                 if (icon.tagName.toLowerCase() === 'ion-icon') icon.name = 'heart-outline';
-                 else icon.className = 'fa-heart fa-regular'; // Font Awesome
+            const svgIcon = btn.querySelector('svg.movie-card-fav-icon');
+            if (svgIcon) {
+                svgIcon.classList.remove('fas', 'fa-solid');
+                svgIcon.classList.add('far', 'fa-regular');
+                svgIcon.setAttribute('data-prefix', 'far');
             }
         });
       }
@@ -969,7 +965,6 @@
         const password = document.getElementById('login-password').value;
         try {
           await auth.signInWithEmailAndPassword(email, password);
-          console.log("登入表單：登入成功");
           loginForm.reset();
         } catch (error) {
           console.error("登入表單：登入錯誤:", error);
@@ -989,14 +984,15 @@
         }
         try {
           const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-          console.log("註冊表單：註冊成功，使用者:", userCredential.user);
+          // --- >>> 修改：註冊時在 Firestore 設定預設 photoURL <<< ---
           await db.collection('users').doc(userCredential.user.uid).set({
               email: userCredential.user.email,
               displayName: userCredential.user.displayName || email.split('@')[0],
-              photoURL: userCredential.user.photoURL || null,
+              photoURL: defaultAvatarUrl, // 設定預設大頭貼
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               favorites: []
           });
+          // --- >>> 修改結束 <<< ---
           alert('哇哇哇哇哇！您註冊成功了！系統將會自動登入');
           registerForm.reset();
         } catch (error) {
@@ -1011,15 +1007,23 @@
         try {
           const result = await auth.signInWithPopup(googleProvider);
           const user = result.user;
-          console.log("Google 登入：成功，使用者:", user);
           if (result.additionalUserInfo && result.additionalUserInfo.isNewUser) {
+            // Google 登入的使用者通常 Firebase Auth 會自動提供 photoURL
             await db.collection('users').doc(user.uid).set({
                 email: user.email,
                 displayName: user.displayName,
-                photoURL: user.photoURL,
+                photoURL: user.photoURL || defaultAvatarUrl, // 如果 Google 沒提供，也用預設
                 createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                 favorites: []
             });
+          } else if (user) { // 已存在的 Google 使用者，檢查並更新 photoURL (如果需要)
+            const userDocRef = db.collection('users').doc(user.uid);
+            const userDoc = await userDocRef.get();
+            if (userDoc.exists && (!userDoc.data().photoURL || userDoc.data().photoURL !== user.photoURL) && user.photoURL) {
+                await userDocRef.update({ photoURL: user.photoURL });
+            } else if (userDoc.exists && !userDoc.data().photoURL && !user.photoURL) {
+                 await userDocRef.update({ photoURL: defaultAvatarUrl });
+            }
           }
         } catch (error) {
           console.error("Google 登入：錯誤:", error);
@@ -1035,7 +1039,6 @@
       logoutBtn.addEventListener('click', async () => {
         try {
           await auth.signOut();
-          console.log("登出按鈕：登出成功");
         } catch (error) {
           console.error("登出按鈕：登出錯誤:", error);
           alert(`登出失敗：${error.message}`);
@@ -1051,22 +1054,15 @@
         return;
       }
 
-      console.log(`[toggleFavorite] 執行中 - 電影 ID: ${movieId}, 標題: ${movieTitle}, 使用者: ${currentUser.uid}`);
-      console.log("[toggleFavorite] 按鈕元素:", button);
-
-      let iconEl = button.querySelector('i'); // 首先嘗試選取 <i> (Font Awesome)
-      if (!iconEl) {
-          iconEl = button.querySelector('ion-icon'); // 如果沒有找到 <i>，再嘗試選取 <ion-icon>
-          if (iconEl) {
-              console.log("[toggleFavorite] 成功選取到 <ion-icon> 元素:", iconEl);
-          }
-      } else {
-          console.log("[toggleFavorite] 成功選取到 <i> 元素 (Font Awesome):", iconEl);
+      // console.log(`[toggleFavorite] Action - MovieID: ${movieId}, Title: ${movieTitle}`);
+      const svgIcon = button.querySelector('svg.movie-card-fav-icon');
+      if (!svgIcon) {
+          console.error("[toggleFavorite] CRITICAL: SVG icon (svg.movie-card-fav-icon) not found! Button HTML:", button.innerHTML);
+          return;
       }
-
-      if (!iconEl) {
-          console.error("[toggleFavorite] 嚴重錯誤：無法在按鈕內選取到圖示元素 (i 或 ion-icon)！按鈕的 innerHTML:", button.innerHTML);
-      }
+      // else {
+      //     console.log("[toggleFavorite] Found SVG icon:", svgIcon);
+      // }
 
       const userDocRef = db.collection('users').doc(currentUser.uid);
 
@@ -1074,82 +1070,62 @@
         const userDoc = await userDocRef.get();
         let favorites = [];
 
-        if (userDoc.exists && userDoc.data() && userDoc.data().favorites) {
+        if (userDoc.exists && userDoc.data() && Array.isArray(userDoc.data().favorites)) {
           favorites = userDoc.data().favorites;
-          console.log("[toggleFavorite] 從 Firestore 讀取的現有收藏:", JSON.parse(JSON.stringify(favorites)));
         } else {
-          console.warn(`[toggleFavorite] 使用者 ${currentUser.uid} 的文件不存在或 favorites 欄位不存在/非陣列。將建立/重設 favorites。`);
           if(!userDoc.exists) {
             await userDocRef.set({
               email: currentUser.email,
               displayName: currentUser.displayName || currentUser.email.split('@')[0],
+              photoURL: currentUser.photoURL || defaultAvatarUrl, // 確保新文件也有 photoURL
               createdAt: firebase.firestore.FieldValue.serverTimestamp(),
               favorites: []
             }, { merge: true });
-            console.log(`[toggleFavorite] 已為使用者 ${currentUser.uid} 建立文件並初始化 favorites。`);
-          } else if (!userDoc.data().favorites || !Array.isArray(userDoc.data().favorites)) {
+          } else if (!userDoc.data() || !Array.isArray(userDoc.data().favorites)) {
             await userDocRef.update({ favorites: [] });
-             console.log(`[toggleFavorite] 已為使用者 ${currentUser.uid} 的 favorites 欄位重設為空陣列。`);
           }
           favorites = [];
         }
-        if (!Array.isArray(favorites)) favorites = [];
 
         const movieData = { id: movieId, title: movieTitle, image: movieImage, url: movieUrl };
         const favoriteIndex = favorites.findIndex(fav => fav.id === movieId);
-        console.log(`[toggleFavorite] 電影 "${movieTitle}" 在收藏中的索引: ${favoriteIndex}`);
 
         if (favoriteIndex > -1) {
           const movieToRemove = favorites[favoriteIndex];
-          console.log("[toggleFavorite] 準備從收藏中移除電影:", JSON.parse(JSON.stringify(movieToRemove)));
           await userDocRef.update({
             favorites: firebase.firestore.FieldValue.arrayRemove(movieToRemove)
           });
-          if (iconEl) {
-            console.log("[toggleFavorite] 更新圖示為空心。目前 tagName:", iconEl.tagName);
-            if (iconEl.tagName.toLowerCase() === 'ion-icon') iconEl.name = 'heart-outline';
-            else iconEl.className = 'fa-heart fa-regular'; // Font Awesome
-          }
+          svgIcon.classList.remove('fas', 'fa-solid');
+          svgIcon.classList.add('far', 'fa-regular');
+          svgIcon.setAttribute('data-prefix', 'far');
           button.classList.remove('active');
-          console.log(`[toggleFavorite] ClassList after remove active:`, button.classList);
-          console.log(`電影 ${movieTitle} (ID: ${movieId}) 已成功從收藏中移除`);
+          // console.log(`[toggleFavorite] Removed: ${movieTitle}`);
         } else {
-          console.log("[toggleFavorite] 準備將電影加入收藏:", JSON.parse(JSON.stringify(movieData)));
           await userDocRef.update({
             favorites: firebase.firestore.FieldValue.arrayUnion(movieData)
           });
-          if (iconEl) {
-            console.log("[toggleFavorite] 更新圖示為實心。目前 tagName:", iconEl.tagName);
-            if (iconEl.tagName.toLowerCase() === 'ion-icon') iconEl.name = 'heart';
-            else iconEl.className = 'fa-heart fa-solid'; // Font Awesome
-          }
+          svgIcon.classList.remove('far', 'fa-regular');
+          svgIcon.classList.add('fas', 'fa-solid');
+          svgIcon.setAttribute('data-prefix', 'fas');
           button.classList.add('active');
-          console.log(`[toggleFavorite] ClassList after add active:`, button.classList);
-          console.log(`電影 ${movieTitle} (ID: ${movieId}) 已成功加入收藏`);
+          // console.log(`[toggleFavorite] Added: ${movieTitle}`);
         }
       } catch (error) {
-        console.error("[toggleFavorite] 切換收藏時發生錯誤:", error);
-        // 在這裡可以加入更友好的錯誤提示給使用者
-        // alert("操作收藏失敗，請檢查網路連線並稍後再試！");
+        console.error("[toggleFavorite] Error toggling favorite:", error);
       }
     }
 
     async function loadUserFavorites(uid) {
-      if (!uid) {
-        console.warn("[loadUserFavorites] UID 為空，無法載入收藏。");
-        return;
-      }
-      console.log(`[loadUserFavorites] 準備為使用者 ${uid} 載入收藏`);
+      if (!uid) return;
+      // console.log(`[loadUserFavorites] Loading for user: ${uid}`);
       try {
         const userDocRef = db.collection('users').doc(uid);
         const userDoc = await userDocRef.get();
         let favorites = [];
         if (userDoc.exists && userDoc.data() && Array.isArray(userDoc.data().favorites)) {
           favorites = userDoc.data().favorites;
-        } else {
-          console.log(`[loadUserFavorites] 使用者 ${uid} 沒有收藏，或 favorites 格式不正確。`);
         }
-        console.log(`[loadUserFavorites] 從 Firestore 讀取到的收藏 (使用者 ${uid}):`, JSON.parse(JSON.stringify(favorites)));
+        // console.log(`[loadUserFavorites] Favorites from Firestore for ${uid}:`, JSON.parse(JSON.stringify(favorites)));
 
         document.querySelectorAll('.movie-card').forEach(card => {
           const movieLink = card.querySelector('a[href^="./movie-details-"]');
@@ -1160,41 +1136,35 @@
           if (!favButton) return;
 
           const isFav = favorites.some(fav => fav.id === movieId);
-          let icon = favButton.querySelector('i'); // 首先嘗試選取 <i> (Font Awesome)
-          if (!icon) {
-              icon = favButton.querySelector('ion-icon'); // 如果沒有找到 <i>，再嘗試選取 <ion-icon>
-          }
-
-          // console.log(`[loadUserFavorites] 卡片: ${movieId}, 是否收藏: ${isFav}, 選取的圖示:`, icon);
+          const svgIcon = favButton.querySelector('svg.movie-card-fav-icon');
 
           if (isFav) {
             favButton.classList.add('active');
-            if (icon) {
-              if (icon.tagName.toLowerCase() === 'ion-icon') icon.name = 'heart';
-              else icon.className = 'fa-heart fa-solid'; // Font Awesome
+            if (svgIcon) {
+                svgIcon.classList.remove('far', 'fa-regular');
+                svgIcon.classList.add('fas', 'fa-solid');
+                svgIcon.setAttribute('data-prefix', 'fas');
             }
           } else {
             favButton.classList.remove('active');
-            if (icon) {
-              if (icon.tagName.toLowerCase() === 'ion-icon') icon.name = 'heart-outline';
-              else icon.className = 'fa-heart fa-regular'; // Font Awesome
+            if (svgIcon) {
+                svgIcon.classList.remove('fas', 'fa-solid');
+                svgIcon.classList.add('far', 'fa-regular');
+                svgIcon.setAttribute('data-prefix', 'far');
             }
           }
         });
-        console.log("[loadUserFavorites] 更新所有電影卡愛心圖示完成。");
-      } catch (error) {
-        console.error("[loadUserFavorites] 載入使用者收藏時發生錯誤:", error);
+        // console.log("[loadUserFavorites] Updated all movie card favorite icons.");
+      } catch (error)
+        console.error("[loadUserFavorites] Error loading user favorites:", error);
       }
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-      console.log("[DOMContentLoaded] DOM 已完全載入並解析。");
+      // console.log("[DOMContentLoaded] DOM fully loaded and parsed.");
       document.querySelectorAll('.movie-card').forEach(function(card) {
         const cardMeta = card.querySelector('.card-meta');
-        if (!cardMeta) {
-            // console.warn("[DOMContentLoaded] 找不到電影卡的 .card-meta 元素:", card);
-            return;
-        }
+        if (!cardMeta) return;
         const titleElement = card.querySelector('.card-title');
         const movieTitle = titleElement ? titleElement.textContent.trim() : '未知標題';
         const linkElement = card.querySelector('a[href^="./movie-details-"]');
@@ -1203,21 +1173,17 @@
         const imageElement = card.querySelector('.card-banner img');
         const movieImage = imageElement ? imageElement.getAttribute('src') : null;
 
-        if (!movieId || !movieTitle || !movieImage || !movieUrl) {
-            return;
-        }
-        if (card.querySelector('.favorite-btn')) {
-            return;
-        }
+        if (!movieId || !movieTitle || !movieImage || !movieUrl) return;
+        if (card.querySelector('.favorite-btn')) return;
 
         const btn = document.createElement('button');
         btn.className = 'favorite-btn';
-        btn.innerHTML = '<i class="fa-heart fa-regular movie-card-fav-icon"></i>'; // 添加一個特定的 class 以便選取
+        btn.innerHTML = '<i class="far fa-heart movie-card-fav-icon"></i>';
 
         btn.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
-          console.log(`[DOMContentLoaded] 愛心按鈕被點擊 - 電影 ID: ${movieId}`);
+          // console.log(`[DOMContentLoaded] Favorite button clicked - Movie ID: ${movieId}`);
           toggleFavorite(this, movieId, movieTitle, movieImage, movieUrl);
         });
 
@@ -1231,10 +1197,10 @@
 
       const currentUser = auth.currentUser;
       if (currentUser) {
-        console.log("[DOMContentLoaded] 目前使用者已登入，準備載入收藏。");
+        // console.log("[DOMContentLoaded] Current user logged in, loading favorites.");
         loadUserFavorites(currentUser.uid);
       } else {
-        console.log("[DOMContentLoaded] 目前沒有使用者登入。");
+        // console.log("[DOMContentLoaded] No current user logged in.");
       }
     });
   </script>
