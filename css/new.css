@@ -71,9 +71,36 @@
   padding-block: var(--section-padding);
 }
 
-.hero {
+/* .hero {
   background: url("https://cdn.glitch.global/3a031cf8-fec2-4247-ad3e-ed0cc686f2d9/topgun.jpg?v=1717922161073");
   background-size:cover ;
+} */
+ .hero {
+  background-image: url('/assets/images/捍衛戰士horizontal.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+/* 加一層半透明遮罩讓文字更清晰 */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.7) 40%,
+    rgba(0, 0, 0, 0.2) 100%
+  );
+  z-index: 0;
+}
+
+/* 確保內容在遮罩上方 */
+.hero .container,
+.hero .wraper {
+  position: relative;
+  z-index: 1;
 }
 .footer-brand-wrapper {
   display:none;
