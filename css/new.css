@@ -85,7 +85,7 @@
   background-size:cover ;
 } */
  .hero {
-  background-image: url('../images/topgunhorizontal.jpg');
+  background-image: url('./assets/images/topgunhorizontal.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
