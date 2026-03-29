@@ -38,11 +38,20 @@
     color: #FFF0F5;
   }
   
-.mainfont {
+.originalfont {
   font-family: "Reggae One", system-ui;
   font-weight: 400;
   font-style: normal;
 }
+
+
+.mainfont {
+  font-family: "Noto Serif TC", serif;
+  font-optical-sizing: auto;
+  font-weight: <400>;
+  font-style: normal;
+}
+
 .secondaryfont {
   font-family: "Kaisei Decol", serif;
   font-weight: 400;
